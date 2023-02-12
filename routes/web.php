@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('exercises', \App\Http\Controllers\ExerciseController::class);
+Route::resource('routines', \App\Http\Controllers\RoutineController::class);

@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRoutineRequest;
 use App\Http\Requests\UpdateRoutineRequest;
 use App\Models\Routine;
+use Illuminate\Http\Request;
 
 class RoutineController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Routine::class, 'routine');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +42,13 @@ class RoutineController extends Controller
      */
     public function store(StoreRoutineRequest $request)
     {
-        //
+        $routine = $request->user()->routines()->create($request->validated());
+
+        if ($request->expectsJson()) {
+            return response()->json($routine->toArray(), 201);
+        } else {
+            // @TODO
+        }
     }
 
     /**
@@ -70,17 +82,28 @@ class RoutineController extends Controller
      */
     public function update(UpdateRoutineRequest $request, Routine $routine)
     {
-        //
+        $routine->update($request->validated());
+
+        if ($request->expectsJson()) {
+            return response()->json($routine->toArray());
+        } else {
+            // @TODO
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Routine  $routine
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Routine $routine)
+    public function destroy(Request $request, Routine $routine)
     {
-        //
+        $routine->delete();
+
+        if ($request->expectsJson()) {
+            return response()->json(null);
+        } else {
+            // @TODO
+        }
     }
 }

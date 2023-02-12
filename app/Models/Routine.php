@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
+ * @property string $name
  *
  * @property Exercise[]|Collection $exercises
  *
@@ -19,6 +20,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Routine extends Model
 {
     use HasFactory, BelongsToUser;
+
+    protected $fillable = [
+        'name',
+    ];
 
     public function exercises() : BelongsToMany
     {

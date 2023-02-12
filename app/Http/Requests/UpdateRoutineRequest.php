@@ -2,29 +2,17 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateRoutineRequest extends FormRequest
+class UpdateRoutineRequest extends StoreRoutineRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize() : bool
     {
-        return false;
-    }
+        $routine = $this->route('routine');
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
-    public function rules()
-    {
-        return [
-            //
-        ];
+        return $routine && auth()->check() && auth()->user()->can('update', $routine);
     }
 }

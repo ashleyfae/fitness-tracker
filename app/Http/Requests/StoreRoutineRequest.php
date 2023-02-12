@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Routine;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRoutineRequest extends FormRequest
@@ -11,9 +12,9 @@ class StoreRoutineRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize() : bool
     {
-        return false;
+        return auth()->check() && auth()->user()->can('create', Routine::class);
     }
 
     /**
@@ -21,10 +22,10 @@ class StoreRoutineRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules() : array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
         ];
     }
 }

@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Exercise::class);
     }
+
+    public function routines() : HasMany
+    {
+        return $this->hasMany(Routine::class);
+    }
 }
