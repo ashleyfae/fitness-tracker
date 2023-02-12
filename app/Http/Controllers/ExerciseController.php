@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
 use App\Models\Exercise;
+use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Exercise::class, 'exercise');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +42,14 @@ class ExerciseController extends Controller
      */
     public function store(StoreExerciseRequest $request)
     {
-        //
+        /** @var Exercise $exercise */
+        $exercise = $request->user()->exercises()->create($request->validated());
+
+        if ($request->expectsJson()) {
+            return response()->json($exercise->toArray(), 201);
+        } else {
+            // @TODO
+        }
     }
 
     /**
@@ -70,17 +83,28 @@ class ExerciseController extends Controller
      */
     public function update(UpdateExerciseRequest $request, Exercise $exercise)
     {
-        //
+        $exercise->update($request->validated());
+
+        if ($request->expectsJson()) {
+            return response()->json($exercise->toArray());
+        } else {
+            // @TODO
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Exercise  $exercise
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Exercise $exercise)
+    public function destroy(Request $request, Exercise $exercise)
     {
-        //
+        $exercise->delete();
+
+        if ($request->expectsJson()) {
+            return response()->json(null);
+        } else {
+            // @TODO
+        }
     }
 }

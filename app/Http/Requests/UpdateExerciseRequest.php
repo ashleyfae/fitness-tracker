@@ -2,29 +2,19 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Exercise;
 
-class UpdateExerciseRequest extends FormRequest
+class UpdateExerciseRequest extends StoreExerciseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize() : bool
     {
-        return false;
-    }
+        $exercise = $this->route('exercise');
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
-    public function rules()
-    {
-        return [
-            //
-        ];
+        return auth()->check() && $exercise instanceof Exercise && auth()->user()->can('update', $exercise);
     }
 }

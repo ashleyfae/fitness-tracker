@@ -11,6 +11,8 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property string $name
+ * @property ?string $description
+ * @property ?string $image_path
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -22,5 +24,7 @@ class Exercise extends Model
 
     protected $fillable = [
         'name',
+        'description',
+        'image_path',
     ];
 }

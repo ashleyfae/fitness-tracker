@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Exercise;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreExerciseRequest extends FormRequest
@@ -11,9 +12,9 @@ class StoreExerciseRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize() : bool
     {
-        return false;
+        return auth()->check() && auth()->user()->can('create', Exercise::class);
     }
 
     /**
@@ -21,10 +22,12 @@ class StoreExerciseRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules() : array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'image' => ['nullable', 'image'],
         ];
     }
 }
