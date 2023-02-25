@@ -1,0 +1,8 @@
+textarea {
+    resize: vertical;
+
+    &:not([rows]) {
+        max-height: 40em;
+        min-height: 8em;
+    }
+}

@@ -1,0 +1,15 @@
+@use "sass:map";
+
+.help {
+    @include text-small;
+    color: var(--color-subtitle);
+    margin: map.get($units, "1") 0 0;
+
+    &.danger {
+        color: var(--color-red-400);
+
+        .light & {
+            color: var(--color-red-500);
+        }
+    }
+}

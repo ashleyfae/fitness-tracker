@@ -5,6 +5,8 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Exercise;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
@@ -40,16 +42,29 @@ class ExerciseControllerTest extends TestCase
      */
     public function testUserCanStore(array $postData, int $expectedResponseCode): void
     {
+        Storage::fake();
+
         $user = User::factory()->create();
+
+        // add an image
+        $file = UploadedFile::fake()->image('exercise.jpg');
+        $postData['image'] = $file;
 
         $response = $this->actingAs($user)->postJson(route('exercises.store'), $postData);
 
         $response->assertStatus($expectedResponseCode);
 
+        $dataToCheck = $postData;
+        unset($dataToCheck['image']);
+
         if ($expectedResponseCode === 201) {
-            $this->assertDatabaseHas(Exercise::class, $postData);
+            $dataToCheck['image_path'] = "exercises/{$file->hashName()}";
+
+            $this->assertDatabaseHas(Exercise::class, $dataToCheck);
+            Storage::assertExists("exercises/{$file->hashName()}");
         } else {
-            $this->assertDatabaseMissing(Exercise::class, $postData);
+            $this->assertDatabaseMissing(Exercise::class, $dataToCheck);
+            Storage::assertMissing("exercises/{$file->hashName()}");
         }
     }
 

@@ -1,0 +1,37 @@
+@use "sass:map";
+
+.field {
+    margin-bottom: map.get($units, "4");
+
+    label {
+        display: block;
+        margin-bottom: map.get($units, "0.5");
+    }
+}
+
+.joined {
+    display: flex;
+    justify-content: flex-start;
+
+    > input[type="text"],
+    > input[type="password"],
+    > input[type="number"],
+    > input[type="url"],
+    > input[type="search"],
+    > button,
+    > .button {
+        &:first-child:not(:only-child) {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        &:last-child:not(:only-child) {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        &:not(:last-child) {
+            margin-right: -1px;
+        }
+    }
+}

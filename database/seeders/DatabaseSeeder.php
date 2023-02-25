@@ -20,18 +20,6 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         $this->createExercises($user);
-
-        Exercise::factory()
-            ->for($user)
-            ->create([
-                'name' => 'Bench Press',
-            ]);
-
-        Exercise::factory()
-            ->for($user)
-            ->create([
-                'name' => 'Push-Up',
-            ]);
     }
 
     protected function createExercises(User $user): void

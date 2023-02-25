@@ -1,0 +1,25 @@
+@use "sass:map";
+
+@each $name, $unit in $font-size {
+    .text-#{escape-full-stop($name)} {
+        font-size: $unit;
+        line-height: map.get($line-height, $name)
+    }
+}
+
+.word-break-all {
+    word-break: break-all;
+}
+
+.font-normal {
+    font-weight: 400;
+}
+.font-bold {
+    font-weight: 600;
+}
+
+.overflow-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

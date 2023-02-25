@@ -1,0 +1,22 @@
+#app {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+#wrap {
+    flex: 1;
+}
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    max-width: $size--2xl;
+    width: 100%;
+
+    @media (min-width: $size--large) {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}

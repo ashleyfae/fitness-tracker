@@ -1,0 +1,106 @@
+:root {
+    --color-grey-100: #F3F4F6;
+    --color-grey-200: #E5E7EB;
+    --color-grey-300: #d1d5db;
+    --color-grey-400: #9ca3af;
+    --color-grey-500: #6b7280;
+    --color-grey-600: #4B5563;
+    --color-grey-700: #374151;
+    --color-grey-800: #1f2937;
+    --color-grey-900: #111827;
+
+    --color-blue-300: #93C5FD;
+    --color-blue-400: #60a5fa;
+    --color-blue-500: #3b82f6;
+    --color-blue-600: #2563EB;
+    --color-blue-700: #1D4ED8;
+    --color-blue-800: #1E40AF;
+    --color-blue-900: #1E3A8A;
+
+    --color-green-200: #A7F3D0;
+    --color-green-500: #10B981;
+    --color-green-600: #46954a;
+    --color-green-700: #388e3c;
+
+    --color-red-400: #F87171;
+    --color-red-500: #EF4444;
+
+    --color-primary: #1d4ed8;
+    --color-text: #b8c4cf;
+    --color-bg: #171c25;
+    --color-links: var(--color-blue-400);
+    --color-danger: var(--color-red-400);
+
+    // Inputs
+    --color-search: var(--color-grey-700);
+    --color-input: var(--color-grey-800);
+    --color-input-border: var(--color-grey-600);
+    --color-input-text: var(--color-grey-200);
+
+    // Typography
+    --color-title: #fff;
+    --color-subtitle: var(--color-grey-400);
+
+    // Box
+    --color-box: var(--color-grey-800);
+
+    // Buttons
+    --color-button: var(--color-grey-700);
+    --color-button-border: var(--color-grey-600);
+    --color-button-text: white;
+
+    // Dropdown
+    --color-dropdown: #000;
+    --color-dropdown-text: #fff;
+    --color-dropdown-hover: var(--color-grey-800);
+    --color-dropdown-text-hover: #fff;
+
+    // Tables
+    --color-table-background: var(--color-grey-800);
+    --color-table-border: var(--color-grey-700);
+
+    // Contexts
+    --color-context-info: var(--color-blue-600);
+    --color-context-danger: var(--color-red-500);
+    --color-context-success: var(--color-green-700);
+
+    --color-navbar: var(--color-grey-800);
+    --color-navbar-hover: var(--color-grey-700);
+    --color-navbar-text: var(--color-grey-300);
+    --color-navbar-text-hover: #fff;
+    --color-navbar-active: var(--color-grey-900);
+    --color-navbar-text-active: #fff;
+}
+
+.light {
+    --color-bg: white;
+    --color-text: var(--color-grey-700);
+    --color-links: var(--color-blue-500);
+
+    --color-title: var(--color-text);
+    --color-subtitle: var(--color-grey-500);
+    --color-danger: var(--color-red-500);
+
+    // Box
+    --color-box: var(--color-grey-100);
+
+    // Buttons
+    --color-button: var(--color-grey-100);
+    --color-button-border: var(--color-grey-300);
+    --color-button-text: var(--color-text);
+
+    // Inputs
+    --color-input: var(--color-grey-100);
+    --color-input-border: var(--color-grey-300);
+    --color-input-text: var(--color-text);
+
+    // Dropdown
+    --color-dropdown: white;
+    --color-dropdown-text: var(--color-grey-700);
+    --color-dropdown-hover: var(--color-grey-100);
+    --color-dropdown-text-hover: var(--color-grey-700);
+
+    // Tables
+    --color-table-border: var(--color-grey-300);
+    --color-table-background: var(--color-grey-100);
+}

@@ -1,0 +1,17 @@
+@mixin info {
+    background: var(--color-context-info);
+    border-color: var(--color-context-info);
+    color: white;
+}
+
+@mixin success {
+    background: var(--color-context-success);
+    border-color: var(--color-context-success);
+    color: white;
+}
+
+@mixin danger {
+    background: var(--color-context-danger);
+    border-color: var(--color-context-danger);
+    color: white;
+}

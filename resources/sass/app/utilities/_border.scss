@@ -1,0 +1,5 @@
+.border-list + .border-list {
+    border-top: 2px solid var(--color-box);
+    margin-top: 1rem;
+    padding-top: 1rem;
+}

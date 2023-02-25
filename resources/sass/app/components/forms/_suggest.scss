@@ -1,0 +1,13 @@
+.suggest {
+    .relative {
+        flex-grow: 1;
+    }
+
+    &--results {
+        margin-top: 0;
+        max-height: 200px;
+        overflow-y: scroll;
+        z-index: 100;
+        width: 100%;
+    }
+}

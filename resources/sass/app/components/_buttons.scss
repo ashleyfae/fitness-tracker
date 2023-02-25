@@ -1,0 +1,137 @@
+@use "sass:map";
+
+button, .button {
+    @include rounded-md;
+
+    background: var(--color-button);
+    border: 1px solid var(--color-button-border);
+    color: var(--color-button-text);
+    cursor: pointer;
+    display: inline-block;
+    font: {
+        family: inherit;
+        size: 100%;
+    }
+    line-height: 1.15;
+    margin: 0;
+    padding: map.get($units, "2.5") map.get($units, "3");
+    text-transform: none;
+
+    &.small {
+        font: {
+            size: map.get($font-size, "xs");
+        }
+        padding: map.get($units, "1.5") map.get($units, "2");
+    }
+
+    &:hover {
+        --color-button: var(--color-grey-600);
+        text-decoration: none;
+
+        .light & {
+            --color-button: var(--color-grey-200);
+        }
+    }
+
+    &:focus {
+        --color-button-border: var(--color-blue-400);
+
+        .light & {
+            --color-button-border: var(--color-blue-500);
+        }
+    }
+
+    &.success {
+        --color-button: var(--color-context-success);
+        --color-button-border: var(--color-context-success);
+        --color-button-text: white;
+
+        &:hover, &:focus {
+            --color-button: var(--color-green-600);
+            --color-button-border: var(--color-green-600);
+        }
+    }
+
+    &.danger {
+        --color-button: var(--color-context-danger);
+        --color-button-border: var(--color-context-danger);
+        --color-button-text: white;
+
+        &:hover, &:focus {
+            --color-button: var(--color-red-400);
+            --color-button-border: var(--color-red-400);
+        }
+    }
+
+    &.info, &.primary {
+        --color-button: var(--color-context-info);
+        --color-button-border: var(--color-context-info); // was 400
+        --color-button-text: white;
+
+        &:hover, &:focus {
+            --color-button: var(--color-blue-500);
+            --color-button-border: var(--color-blue-500); // was 400
+        }
+
+        /*.light & {
+            --color-button-border: var(--color-blue-700);
+
+            &:hover, &:focus {
+                --color-button-border: var(--color-blue-700);
+            }
+        }*/
+    }
+
+    &.static {
+        --color-button: var(--color-grey-800);
+        --color-button-border: var(--color-grey-700);
+        --color-button-text: var(--color-grey-500);
+        pointer-events: none;
+
+        .light & {
+            --color-button: var(--color-grey-100);
+            --color-button-border: var(--color-grey-300);
+            --color-button-text: var(--color-grey-600);
+        }
+    }
+
+    &.loading {
+        color: transparent !important;
+        pointer-events: none;
+        position: relative;
+
+        &::after {
+            @include loader;
+            @include center(1em);
+            position: absolute !important;
+        }
+    }
+
+    &[disabled] {
+        --color-button: var(--color-grey-800);
+        --color-button-border: var(--color-grey-600);
+        --color-button-text: var(--color-grey-500);
+        cursor: not-allowed;
+
+        .light & {
+            --color-button: transparent;
+            --color-button-border: var(--color-grey-200);
+            --color-button-text: var(--color-grey-400);
+        }
+    }
+}
+
+.buttons {
+    button,
+    .button {
+        &:not(:last-child):not(.w-full) {
+            margin-right: map.get($units, "1");
+        }
+    }
+}
+
+.plain {
+    background: none !important;
+    border: none !important;
+    padding: 0;
+}

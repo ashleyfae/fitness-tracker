@@ -1,0 +1,13 @@
+@mixin text-xs {
+    font: {
+        size: .75rem;
+    }
+    line-height: 1rem;
+}
+
+@mixin text-small {
+    font: {
+        size: 0.875rem;
+    }
+    line-height: 1.25rem;
+}

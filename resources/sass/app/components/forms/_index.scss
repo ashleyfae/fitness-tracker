@@ -1,0 +1,25 @@
+@use "sass:list";
+
+@import 'fields';
+@import 'help';
+@import 'inputs';
+@import 'labels';
+@import 'textarea';
+
+@import 'suggest';
+
+.has-addons {
+    .control:first-child:not(:only-child) {
+        @each $input in list.append($inputs, ".button") {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
+
+    .control:last-child:not(:only-child) {
+        @each $input in list.append($inputs, ".button") {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+    }
+}

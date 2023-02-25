@@ -1,0 +1,49 @@
+@mixin navbar {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li {
+        position: relative;
+
+        > a, > button {
+            @include text-small;
+            @include rounded-md;
+
+            background: none;
+            border: none;
+            color: var(--color-navbar-text);
+            font: {
+                weight: 500;
+            }
+            display: block;
+            padding: .5rem 0.75rem;
+            text-align: left;
+            width: 100%;
+
+            &.active {
+                background: var(--color-navbar-active);
+                color: var(--color-navbar-text-active);
+            }
+
+            &:hover {
+                --color-navbar-text: var(--color-navbar-text-hover);
+                background: var(--color-navbar-hover);
+                text-decoration: none;
+            }
+        }
+    }
+
+    @media (min-width: $size--medium) {
+        display: flex;
+
+        > li {
+            margin: 0;
+
+            &:not([hidden]) ~ :not([hidden]) {
+                margin-left: 1rem;
+            }
+        }
+    }
+}

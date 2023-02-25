@@ -1,0 +1,34 @@
+.breadcrumbs {
+    white-space: nowrap;
+
+    ul {
+        list-style: none;
+        align-items: flex-start;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        align-items: center;
+        display: flex;
+
+        &:first-child a {
+            padding-left: 0;
+        }
+    }
+
+    li+li:before {
+        color: var(--color-subtitle);
+        content: " / ";
+        display: inline-block;
+        margin: 0 0.75rem;
+    }
+
+    a {
+        align-items: center;
+        justify-content: center;
+    }
+}

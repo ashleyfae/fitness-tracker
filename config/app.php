@@ -193,6 +193,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        \App\Providers\FortifyServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
     ],
@@ -211,5 +212,15 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
+
+    /*
+    |--------------------------------------------------------------------------
+    | No Index
+    |--------------------------------------------------------------------------
+    |
+    | Whether to tell search engines to not index the site.
+    |
+    */
+    'noindex' => true,
 
 ];

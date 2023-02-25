@@ -1,0 +1,35 @@
+.bg-info {
+    background: var(--color-context-info);
+}
+.bg-success {
+    background: var(--color-context-success);
+}
+
+.bg-grey-light {
+    background: var(--color-grey-700);
+
+    .light & {
+        background: var(--color-grey-300);
+    }
+}
+
+.bg-grey-800 {
+    background: var(--color-grey-800);
+
+    .light & {
+        background: var(--color-grey-200);
+    }
+}
+
+.bg-cta {
+    background: var(--color-navbar);
+    color: white;
+
+    .light & {
+        --color-subtitle: var(--color-grey-400);
+    }
+}
+
+.bg-box {
+    background: var(--color-box);
+}

@@ -13,5 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', \App\Http\Controllers\HomepageController::class)->name('home');
 Route::resource('exercises', \App\Http\Controllers\ExerciseController::class);
 Route::resource('routines', \App\Http\Controllers\RoutineController::class);

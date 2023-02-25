@@ -1,0 +1,35 @@
+@use "sass:map";
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+
+    .table--bg {
+        background: var(--color-table-background);
+    }
+
+    td, th {
+        border-bottom: 2px solid var(--color-box);
+        padding: map.get($units, "2") map.get($units, "4");
+        vertical-align: top;
+        text-align: inherit;
+    }
+
+    &.bordered {
+        td, th {
+            border: 1px solid var(--color-table-border);
+        }
+    }
+
+    thead td, thead th {
+        border-bottom-width: 4px;
+    }
+}
+
+.table-container {
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+}

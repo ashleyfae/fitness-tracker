@@ -1,0 +1,65 @@
+@use "sass:list";
+@use "sass:map";
+
+@each $input in $inputs {
+    #{$input} {
+        @include rounded-md;
+        @include text-small;
+
+        background: var(--color-input);
+        border: 1px solid var(--color-input-border);
+        color: var(--color-input-text);
+        font: {
+            family: inherit;
+        }
+        padding: .5rem .75rem;
+        width: 100%;
+
+        .light & {
+            $placeholders: ':-moz', ':-webkit-input', '-moz', '-ms-input';
+            @each $placeholder in $placeholders {
+                &:#{$placeholder}-placeholder {
+                    color: var(--color-grey-400);
+                }
+            }
+        }
+
+        &:focus {
+            --color-input-border: var(--color-blue-400);
+            outline: none;
+        }
+
+        &::placeholder {
+            color: rgba(255, 255, 255, .5);
+        }
+
+        .light & {
+            &:focus {
+                --color-input-border: var(--color-blue-500);
+            }
+        }
+
+        &[disabled] {
+            --color-input: var(--color-grey-900);
+            --color-input-border: var(--color-grey-700);
+            --color-input-text: var(--color-grey-400);
+
+            .light & {
+                --color-input: var(--color-grey-200);
+                --color-input-border: var(--color-grey-300);
+                --color-input-text: var(--color-subtitle);
+            }
+        }
+
+        &.danger, &.danger:focus {
+            --color-input-border: var(--color-context-danger);
+        }
+    }
+}
+
+.checkboxes {
+    label {
+        display: inline-block;
+        margin: 0 map.get($units, "3") map.get($units, "1.5") 0;
+    }
+}

@@ -1,0 +1,30 @@
+.colour--title {
+    color: var(--color-title);
+}
+
+.colour--subtitle {
+    color: var(--color-subtitle);
+}
+
+.colour--white {
+    color: white;
+}
+
+.colour--success {
+    --color-context-success: var(--color-green-500);
+    color: var(--color-context-success) !important;
+
+    .light & {
+        --color-context-success: var(--color-green-700);
+    }
+}
+.colour--info {
+    color: var(--color-links) !important;
+}
+.colour--danger, .colour--danger a {
+    color: var(--color-danger) !important;
+}
+
+.colour--subtitle {
+    color: var(--color-subtitle);
+}

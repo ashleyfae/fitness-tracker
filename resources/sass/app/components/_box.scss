@@ -1,0 +1,13 @@
+.box {
+    background: var(--color-box);
+    display: block;
+    padding: 1.25rem;
+
+    .light & {
+        @each $input in $inputs {
+            #{$input} {
+                --color-input: white;
+            }
+        }
+    }
+}
