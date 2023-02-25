@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('exercise_routine', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(\App\Models\Exercise::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Routine::class)->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('number_sets')->default(3);

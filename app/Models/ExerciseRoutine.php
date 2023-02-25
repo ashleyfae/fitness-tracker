@@ -13,5 +13,5 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class ExerciseRoutine extends Pivot
 {
-    //
+    public $incrementing = true;
 }
