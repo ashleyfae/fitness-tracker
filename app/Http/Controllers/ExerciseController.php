@@ -17,11 +17,19 @@ class ExerciseController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @TODO Support search
+     *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $exercises = $request->user()->exercises()->orderBy('name')->paginate(40);
+
+        if ($request->expectsJson()) {
+            return response()->json($exercises->toArray());
+        } else {
+            // @TODO
+        }
     }
 
     /**

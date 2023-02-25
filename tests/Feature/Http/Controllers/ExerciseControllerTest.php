@@ -15,6 +15,26 @@ class ExerciseControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
+     * @covers \App\Http\Controllers\ExerciseController::index()
+     */
+    public function testUserCanList(): void
+    {
+        $user = User::factory()->create();
+        $exercises = Exercise::factory()->for($user)->count(10)->create();
+        $otherExercise = Exercise::factory()->count(2)->create();
+
+        $response = $this->actingAs($user)->getJson(route('exercises.index'));
+
+        $response->assertStatus(200);
+
+        $body = json_decode($response->content(), true);
+
+        $this->assertSame(1, $body['current_page']);
+        $this->assertSame(10, $body['total']);
+        $this->assertCount(10, $body['data']);
+    }
+
+    /**
      * @covers \App\Http\Controllers\ExerciseController::store()
      * @dataProvider providerCanStore
      */
