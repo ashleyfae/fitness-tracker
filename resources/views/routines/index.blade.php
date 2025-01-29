@@ -8,7 +8,9 @@
         <div id="routines">
             @foreach($routines as $routine)
                 <div class="routine">
-                    <h2>{{ $routine->name }}</h2>
+                    <h2>
+                        <a href="{{ route('routines.edit', $routine) }}">{{ $routine->name }}</a>
+                    </h2>
                 </div>
             @endforeach
         </div>

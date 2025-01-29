@@ -60,23 +60,19 @@ class RoutineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Routine $routine) : JsonResponse|View
+    public function show(Request $request, Routine $routine) : JsonResponse
     {
-        if ($request->wantsJson()) {
-            $routine->load('exercises');
+        $routine->load('exercises');
 
-            return response()->json($routine->toArray());
-        }
-
-        return view('routines.show', ['routine' => $routine]);
+        return response()->json($routine->toArray());
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Routine $routine) : View
+    public function edit(Request $request, Routine $routine) : View
     {
-        //
+        return view('routines.edit', ['routine' => $routine]);
     }
 
     /**
