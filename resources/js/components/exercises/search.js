@@ -68,46 +68,61 @@ function formatExerciseForSearch(exercise) {
 </div>`;
 }
 
+function getMaxSortValue(exerciseList) {
+    const existingExercises = exerciseList.querySelectorAll('.routine--exercise');
+    let maxSort = -1;
+
+    existingExercises.forEach(exerciseDiv => {
+        const sortInput = exerciseDiv.querySelector('input[name$="[sort]"]');
+        if (sortInput) {
+            const sortValue = parseInt(sortInput.value);
+            maxSort = Math.max(maxSort, sortValue);
+        }
+    });
+
+    return maxSort;
+}
+
 function handleExerciseClick(event) {
     const button = event.currentTarget;
     const exerciseId = button.getAttribute('data-id');
     const exerciseName = button.getAttribute('data-name');
 
-    // Create exercise object to match the format expected by formatExercise
+    // Get the exercise list wrapper
+    const exerciseList = document.getElementById('exercise-list');
+    if (! exerciseList) {
+        return;
+    }
+
+    // Create the exercise object with sort value one higher than the maximum found
     const exercise = {
         id: exerciseId,
         name: exerciseName,
         number_sets: 3,
         rest_seconds: 60,
-        sort: 0,
+        sort: getMaxSortValue(exerciseList) + 1,
     };
 
-    // Get the exercise list wrapper
-    const exerciseList = document.getElementById('exercise-list');
+    // Create a temporary div to hold the new exercise HTML
+    const temp = document.createElement('div');
+    temp.innerHTML = formatExercise(exercise);
 
-    // Only proceed if we found the exercise list
-    if (exerciseList) {
-        // Create a temporary div to hold the new exercise HTML
-        const temp = document.createElement('div');
-        temp.innerHTML = formatExercise(exercise);
+    // If there's a "No exercises yet" message, remove it first
+    const noExercisesMsg = exerciseList.querySelector('.notification');
+    if (noExercisesMsg) {
+        exerciseList.innerHTML = '';
+    }
 
-        // If there's a "No exercises yet" message, remove it first
-        const noExercisesMsg = exerciseList.querySelector('.notification');
-        if (noExercisesMsg) {
-            exerciseList.innerHTML = '';
-        }
+    // Append the new exercise to the list
+    exerciseList.appendChild(temp.firstElementChild);
 
-        // Append the new exercise to the list
-        exerciseList.appendChild(temp.firstElementChild);
+    // Update the exercise count
+    const currentCount = parseInt(exerciseList.getAttribute('data-exercise-count') || '0');
+    exerciseList.setAttribute('data-exercise-count', (currentCount + 1).toString());
 
-        // Update the exercise count
-        const currentCount = parseInt(exerciseList.getAttribute('data-exercise-count') || '0');
-        exerciseList.setAttribute('data-exercise-count', (currentCount + 1).toString());
-
-        // Close the modal
-        const modal = document.getElementById('add-exercise-modal');
-        if (modal) {
-            modal.classList.remove('is-active');
-        }
+    // Close the modal
+    const modal = document.getElementById('add-exercise-modal');
+    if (modal) {
+        modal.classList.remove('is-active');
     }
 }

@@ -3243,47 +3243,59 @@ function displayExercises(data) {
 function formatExerciseForSearch(exercise) {
   return "<div class=\"exercise--search-result mb-2\">\n<button type=\"button\" data-id=\"".concat(exercise.id, "\" data-name=\"").concat(exercise.name, "\">").concat(exercise.name, "</button>\n</div>");
 }
+function getMaxSortValue(exerciseList) {
+  var existingExercises = exerciseList.querySelectorAll('.routine--exercise');
+  var maxSort = -1;
+  existingExercises.forEach(function (exerciseDiv) {
+    var sortInput = exerciseDiv.querySelector('input[name$="[sort]"]');
+    if (sortInput) {
+      var sortValue = parseInt(sortInput.value);
+      maxSort = Math.max(maxSort, sortValue);
+    }
+  });
+  return maxSort;
+}
 function handleExerciseClick(event) {
   var button = event.currentTarget;
   var exerciseId = button.getAttribute('data-id');
   var exerciseName = button.getAttribute('data-name');
 
-  // Create exercise object to match the format expected by formatExercise
+  // Get the exercise list wrapper
+  var exerciseList = document.getElementById('exercise-list');
+  if (!exerciseList) {
+    return;
+  }
+
+  // Create the exercise object with sort value one higher than the maximum found
   var exercise = {
     id: exerciseId,
     name: exerciseName,
     number_sets: 3,
     rest_seconds: 60,
-    sort: 0
+    sort: getMaxSortValue(exerciseList) + 1
   };
 
-  // Get the exercise list wrapper
-  var exerciseList = document.getElementById('exercise-list');
+  // Create a temporary div to hold the new exercise HTML
+  var temp = document.createElement('div');
+  temp.innerHTML = (0,_routines_formatting__WEBPACK_IMPORTED_MODULE_0__.formatExercise)(exercise);
 
-  // Only proceed if we found the exercise list
-  if (exerciseList) {
-    // Create a temporary div to hold the new exercise HTML
-    var temp = document.createElement('div');
-    temp.innerHTML = (0,_routines_formatting__WEBPACK_IMPORTED_MODULE_0__.formatExercise)(exercise);
+  // If there's a "No exercises yet" message, remove it first
+  var noExercisesMsg = exerciseList.querySelector('.notification');
+  if (noExercisesMsg) {
+    exerciseList.innerHTML = '';
+  }
 
-    // If there's a "No exercises yet" message, remove it first
-    var noExercisesMsg = exerciseList.querySelector('.notification');
-    if (noExercisesMsg) {
-      exerciseList.innerHTML = '';
-    }
+  // Append the new exercise to the list
+  exerciseList.appendChild(temp.firstElementChild);
 
-    // Append the new exercise to the list
-    exerciseList.appendChild(temp.firstElementChild);
+  // Update the exercise count
+  var currentCount = parseInt(exerciseList.getAttribute('data-exercise-count') || '0');
+  exerciseList.setAttribute('data-exercise-count', (currentCount + 1).toString());
 
-    // Update the exercise count
-    var currentCount = parseInt(exerciseList.getAttribute('data-exercise-count') || '0');
-    exerciseList.setAttribute('data-exercise-count', (currentCount + 1).toString());
-
-    // Close the modal
-    var modal = document.getElementById('add-exercise-modal');
-    if (modal) {
-      modal.classList.remove('is-active');
-    }
+  // Close the modal
+  var modal = document.getElementById('add-exercise-modal');
+  if (modal) {
+    modal.classList.remove('is-active');
   }
 }
 
