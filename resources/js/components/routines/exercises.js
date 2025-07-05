@@ -1,3 +1,5 @@
+import {formatExercise} from "./formatting";
+
 document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.getElementById('exercise-list');
 
@@ -32,11 +34,4 @@ function loadExercises(wrapper) {
         .catch(error => {
             console.log('Error getting exercises', error);
         })
-}
-
-function formatExercise(exercise) {
-    return `<div class="routine--exercise">
-<h2>${exercise.name}</h2>
-<input type="hidden" name="exercises[]" value="${exercise.id}">
-</div>`;
 }
