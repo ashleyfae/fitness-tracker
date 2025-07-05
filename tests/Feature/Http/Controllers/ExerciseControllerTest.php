@@ -2,16 +2,16 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Http\Controllers\ExerciseController;
 use App\Models\Exercise;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\ExerciseController
- */
+#[CoversClass(ExerciseController::class)]
 class ExerciseControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -69,7 +69,7 @@ class ExerciseControllerTest extends TestCase
     }
 
     /** @see testUserCanStore */
-    public function providerCanStore() : \Generator
+    public static function providerCanStore() : \Generator
     {
         yield 'name and description is 201' => [
             'postData' => [
@@ -94,7 +94,7 @@ class ExerciseControllerTest extends TestCase
     {
         $response = $this->postJson(route('exercises.store'), ['name' => 'Exercise']);
 
-        $response->assertStatus(403);
+        $response->assertUnauthorized();
     }
 
     /**
@@ -130,7 +130,7 @@ class ExerciseControllerTest extends TestCase
 
         $response = $this->actingAs($user2)->putJson(route('exercises.update', $exercise), ['name' => 'Exercise 2']);
 
-        $response->assertStatus(403);
+        $response->assertForbidden();
     }
 
     /**
@@ -146,7 +146,7 @@ class ExerciseControllerTest extends TestCase
 
         $response = $this->putJson(route('exercises.update', $exercise), ['name' => 'Exercise 2']);
 
-        $response->assertStatus(403);
+        $response->assertUnauthorized();
     }
 
     /**
@@ -180,7 +180,7 @@ class ExerciseControllerTest extends TestCase
 
         $response = $this->actingAs($user2)->deleteJson(route('exercises.destroy', $exercise));
 
-        $response->assertStatus(403);
+        $response->assertForbidden();
 
         $this->assertModelExists($exercise);
     }
@@ -198,7 +198,7 @@ class ExerciseControllerTest extends TestCase
 
         $response = $this->putJson(route('exercises.destroy', $exercise));
 
-        $response->assertStatus(403);
+        $response->assertUnauthorized();
 
         $this->assertModelExists($exercise);
     }
