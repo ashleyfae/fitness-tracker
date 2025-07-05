@@ -98,9 +98,11 @@ function handleExerciseClick(event) {
     const exercise = {
         id: exerciseId,
         name: exerciseName,
-        number_sets: 3,
-        rest_seconds: 60,
-        sort: getMaxSortValue(exerciseList) + 1,
+        pivot: {
+            number_sets: 3,
+            rest_seconds: 60,
+            sort: getMaxSortValue(exerciseList) + 1,
+        }
     };
 
     // Create a temporary div to hold the new exercise HTML

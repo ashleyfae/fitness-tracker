@@ -88,7 +88,7 @@ class RoutineController extends Controller
         } else {
             $request->session()->put('success', 'Routine updated');
 
-            return redirect()->route('routines.show', $routine);
+            return redirect()->route('routines.edit', $routine);
         }
     }
 

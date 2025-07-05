@@ -1,10 +1,18 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Routine')
+
 @section('app')
-    <h1>Routine: {{ $routine->name }}</h1>
+    <h1>Edit Routine: {{ $routine->name }}</h1>
 
     <form method="POST" action="{{ route('routines.update', $routine) }}">
         @csrf
+        @method('PUT')
+
+        <div class="field">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" value="{{ $routine->name }}">
+        </div>
 
         <div
             id="exercise-list"
@@ -18,6 +26,8 @@
             class="modal-trigger"
             data-target="add-exercise-modal"
         >Add Exercise</button>
+
+        <button type="submit">Save</button>
     </form>
 
     <x-elements.modal id="add-exercise-modal">

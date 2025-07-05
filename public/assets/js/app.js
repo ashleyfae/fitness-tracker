@@ -3270,9 +3270,11 @@ function handleExerciseClick(event) {
   var exercise = {
     id: exerciseId,
     name: exerciseName,
-    number_sets: 3,
-    rest_seconds: 60,
-    sort: getMaxSortValue(exerciseList) + 1
+    pivot: {
+      number_sets: 3,
+      rest_seconds: 60,
+      sort: getMaxSortValue(exerciseList) + 1
+    }
   };
 
   // Create a temporary div to hold the new exercise HTML
@@ -3387,7 +3389,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   formatExercise: () => (/* binding */ formatExercise)
 /* harmony export */ });
 function formatExercise(exercise) {
-  return "<div class=\"routine--exercise\">\n<div class=\"flex\">\n    <h2>".concat(exercise.name, "</h2>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sets\">Number sets</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sets\" name=\"exercises[").concat(exercise.id, "][number_sets]\" value=\"").concat(exercise.number_sets || '3', "\" min=\"1\" max=\"200\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-rest\">Rest (seconds)</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-rest\" name=\"exercises[").concat(exercise.id, "][rest_seconds]\" value=\"").concat(exercise.rest_seconds || '60', "\" min=\"1\" max=\"1000\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sort\">Sort position</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sort\" name=\"exercises[").concat(exercise.id, "][sort]\" value=\"").concat(exercise.sort, "\" min=\"0\">\n    </div>\n</div>\n</div>");
+  var _exercise$pivot, _exercise$pivot2, _exercise$pivot3;
+  return "<div class=\"routine--exercise\">\n<div class=\"flex\">\n    <h2>".concat(exercise.name, "</h2>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sets\">Number sets</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sets\" name=\"exercises[").concat(exercise.id, "][number_sets]\" value=\"").concat(((_exercise$pivot = exercise.pivot) === null || _exercise$pivot === void 0 ? void 0 : _exercise$pivot.number_sets) || '3', "\" min=\"1\" max=\"200\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-rest\">Rest (seconds)</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-rest\" name=\"exercises[").concat(exercise.id, "][rest_seconds]\" value=\"").concat(((_exercise$pivot2 = exercise.pivot) === null || _exercise$pivot2 === void 0 ? void 0 : _exercise$pivot2.rest_seconds) || '60', "\" min=\"1\" max=\"1000\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sort\">Sort position</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sort\" name=\"exercises[").concat(exercise.id, "][sort]\" value=\"").concat((_exercise$pivot3 = exercise.pivot) === null || _exercise$pivot3 === void 0 ? void 0 : _exercise$pivot3.sort, "\" min=\"0\">\n    </div>\n</div>\n</div>");
 }
 
 /***/ }),
