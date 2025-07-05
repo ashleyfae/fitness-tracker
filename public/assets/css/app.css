@@ -1643,6 +1643,10 @@ html:not(.light) .modal {
   flex-grow: 1;
 }
 
+.gap-4 {
+  gap: 1rem;
+}
+
 @media (min-width: 640px) {
   .sm\:flex {
     display: flex;

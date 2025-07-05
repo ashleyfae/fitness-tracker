@@ -27,6 +27,10 @@
     flex-grow: 1;
 }
 
+.gap-4 {
+    gap: 1rem;
+}
+
 @media (min-width: $size--small) {
     .sm\:flex {
         display: flex;

@@ -1,20 +1,41 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
-@section('app')
-    <h1>Routines</h1>
-    <a href="{{ route('routines.create') }}" class="button">Add Routine</a>
+@section('title', 'Manage Routines')
 
-    @if($routines && $routines->isNotEmpty())
-        <div id="routines">
+@section('header')
+    <div class="flex align-center gap-4">
+        <h1>Routines</h1>
+        <a href="{{ route('routines.create') }}" class="button">Add Routine</a>
+    </div>
+@endsection
+
+@section('content')
+    <table id="routines">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Exercises</th>
+            <th>Last completed</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if($routines && $routines->isNotEmpty())
             @foreach($routines as $routine)
-                <div class="routine">
-                    <h2>
+                <tr class="routine">
+                    <td>
                         <a href="{{ route('routines.edit', $routine) }}">{{ $routine->name }}</a>
-                    </h2>
-                </div>
+                    </td>
+                    <td>{{ $routine->exercises_count }}</td>
+                    <td>
+                        TODO
+                    </td>
+                </tr>
             @endforeach
-        </div>
-    @else
-        <p>No routines yet.</p>
-    @endif
+        @else
+            <tr>
+                <td colspan="3">No routines yet.</td>
+            </tr>
+        @endif
+        </tbody>
+    </table>
 @endsection
