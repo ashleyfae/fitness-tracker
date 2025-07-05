@@ -1,10 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Edit Routine')
 
-@section('app')
+@section('header')
     <h1>Edit Routine: {{ $routine->name }}</h1>
+@endsection
 
+@section('content')
     <form method="POST" action="{{ route('routines.update', $routine) }}">
         @csrf
         @method('PUT')

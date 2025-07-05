@@ -52,7 +52,7 @@ class RoutineController extends Controller
         if ($request->expectsJson()) {
             return response()->json($routine->toArray(), 201);
         } else {
-            $request->session()->put('success', 'Routine created');
+            $request->session()->flash('success', 'Routine created');
 
             return redirect()->route('routines.show', $routine);
         }
@@ -86,7 +86,7 @@ class RoutineController extends Controller
         if ($request->expectsJson()) {
             return response()->json($routine->toArray());
         } else {
-            $request->session()->put('success', 'Routine updated');
+            $request->session()->flash('success', 'Routine updated');
 
             return redirect()->route('routines.edit', $routine);
         }

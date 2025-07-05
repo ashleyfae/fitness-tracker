@@ -1,15 +1,17 @@
 @extends('layouts.app')
 
 @section('app')
-    <header class="page-header">
-        @yield('header')
-    </header>
+    <main>
+        <header class="page-header">
+            @yield('header')
+        </header>
 
-    @if(session()->get('success'))
-        <div class="notification success">
-            {{ session()->get('success') }}
-        </div>
-    @endif
+        @if(session()->get('success'))
+            <div class="notification success">
+                {{ session()->get('success') }}
+            </div>
+        @endif
 
-    @yield('content')
+        @yield('content')
+    </main>
 @endsection
