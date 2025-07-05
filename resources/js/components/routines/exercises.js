@@ -27,7 +27,7 @@ function loadExercises(wrapper) {
             }
 
             wrapper.innerHTML = html;
-            wrapper.setAttribute('data-exercise-count', '0');
+            wrapper.setAttribute('data-exercise-count', exerciseCount.toString());
         })
         .catch(error => {
             console.log('Error getting exercises', error);
@@ -37,5 +37,6 @@ function loadExercises(wrapper) {
 function formatExercise(exercise) {
     return `<div class="routine--exercise">
 <h2>${exercise.name}</h2>
+<input type="hidden" name="exercises[]" value="${exercise.id}">
 </div>`;
 }
