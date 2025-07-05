@@ -21,5 +21,4 @@ trait BelongsToUser {
     {
         return $this->belongsTo(User::class);
     }
-
 }

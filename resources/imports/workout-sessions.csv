@@ -1,0 +1,2 @@
+rowid,_id,USERID,edit_time,day_id,total_time,workout_time,rest_time,wasted_time,total_exercise,total_weight,recordbreak,starttime,endtime,workout_mode,TIMESTAMP,calories
+80502885,1,3773197,1456181231,18,391,801,14,0,6,3797.5,6,1456180840,1456181231,0,"2021-03-15 22:17:34",0
