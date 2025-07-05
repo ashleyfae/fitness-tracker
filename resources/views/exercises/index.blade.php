@@ -1,32 +1,41 @@
 @extends('layouts.page')
 
 @section('header')
-    <h1>Exercises</h1>
-    <a href="{{ route('exercises.create') }}" class="button">Add Exercise</a>
+    <div class="flex align-center gap-4">
+        <h1>Exercises</h1>
+        <a href="{{ route('exercises.create') }}" class="button">Add Exercise</a>
+    </div>
 @endsection
 
 @section('content')
-    @if($exercises && $exercises->isNotEmpty())
-        <div id="routines">
+    <table id="exercises">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if($exercises && $exercises->isNotEmpty())
             @foreach($exercises as $exercise)
-                <div class="routine">
-                    <h2>
+                <tr class="exercise">
+                    <td>
                         <a href="{{ route('exercises.edit', $exercise) }}">{{ $exercise->name }}</a>
-                    </h2>
-
-                    <form class="delete-exercise" method="POST" action="{{ route('exercises.destroy', $exercise) }}">
-                        @csrf
-                        @method('DELETE')
-
-                        <button
-                            type="submit"
-                            class="button danger "
-                        >Delete</button>
-                    </form>
-                </div>
+                    </td>
+                    <td>
+                        <form class="delete-exercise" method="POST" action="{{ route('exercises.destroy', $exercise) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="button danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
             @endforeach
-        </div>
-    @else
-        <p>No exercises yet.</p>
-    @endif
+        @else
+            <tr>
+                <td colspan="2">No exercises yet.</td>
+            </tr>
+        @endif
+        </tbody>
+    </table>
 @endsection

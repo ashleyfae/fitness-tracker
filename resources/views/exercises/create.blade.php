@@ -1,8 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
-@section('app')
+@section('title', 'Create Exercise')
+
+@section('header')
     <h1>Create Exercise</h1>
+@endsection
 
+@section('content')
     <form method="POST" action="{{ route('exercises.store') }}" enctype="multipart/form-data">
         @csrf
 
