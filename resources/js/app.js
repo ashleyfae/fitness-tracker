@@ -6,9 +6,5 @@ import './layout/modals';
 import './components/exercises/delete';
 import './components/exercises/search';
 
-// Routines
-import routines from './components/routines/_index';
+// Routines (edit routine exercises)
 import './components/routines/exercises';
-
-Alpine.data('routines', routines);
-Alpine.start();

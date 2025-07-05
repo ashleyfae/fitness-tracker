@@ -23,7 +23,7 @@ class RoutineController extends Controller
      */
     public function index(Request $request) : JsonResponse|View
     {
-        $routines = $request->user()->routines()->orderBy('name')->paginate(10);
+        $routines = $request->user()->routines()->orderBy('name')->paginate(20);
 
         if ($request->expectsJson()) {
             return response()->json($routines->toArray());
