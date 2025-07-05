@@ -29,6 +29,7 @@ class Routine extends Model
     {
         return $this->belongsToMany(Exercise::class)
             ->using(ExerciseRoutine::class)
+            ->withPivot(['number_sets', 'rest_seconds', 'sort'])
             ->orderByPivot('sort');
     }
 }

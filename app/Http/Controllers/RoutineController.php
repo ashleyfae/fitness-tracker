@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Routines\UpdateRoutine;
 use App\Http\Requests\StoreRoutineRequest;
 use App\Http\Requests\UpdateRoutineRequest;
 use App\Models\Routine;
@@ -78,14 +79,16 @@ class RoutineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoutineRequest $request, Routine $routine) : JsonResponse|RedirectResponse
+    public function update(UpdateRoutineRequest $request, Routine $routine, UpdateRoutine $updateRoutine) : JsonResponse|RedirectResponse
     {
-        $routine->update($request->validated());
+        $updateRoutine->execute($routine, $request);
 
         if ($request->expectsJson()) {
             return response()->json($routine->toArray());
         } else {
-            // @TODO
+            $request->session()->put('success', 'Routine updated');
+
+            return redirect()->route('routines.show', $routine);
         }
     }
 

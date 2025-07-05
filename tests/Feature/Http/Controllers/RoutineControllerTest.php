@@ -2,15 +2,16 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Http\Controllers\RoutineController;
+use App\Models\Exercise;
 use App\Models\Routine;
 use App\Models\User;
 use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\RoutineController
- */
+#[CoversClass(RoutineController::class)]
 class RoutineControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -35,7 +36,7 @@ class RoutineControllerTest extends TestCase
     }
 
     /** @see testUserCanStore */
-    public function providerCanStore() : Generator
+    public static function providerCanStore() : Generator
     {
         yield 'name is 201' => [
             'postData' => [
@@ -57,7 +58,7 @@ class RoutineControllerTest extends TestCase
     {
         $response = $this->postJson(route('routines.store'), ['name' => 'Routine']);
 
-        $response->assertStatus(403);
+        $response->assertUnauthorized();
     }
 
     /**
@@ -70,13 +71,76 @@ class RoutineControllerTest extends TestCase
         /** @var Routine $routine */
         $routine = Routine::factory()->for($user)->create(['name' => 'Routine 1']);
 
-        $response = $this->actingAs($user)->putJson(route('routines.update', $routine), ['name' => 'Routine 2']);
+        /** @var Exercise $exercise1 */
+        $exercise1 = Exercise::factory()->create();
+        /** @var Exercise $exercise2 */
+        $exercise2 = Exercise::factory()->create();
+
+        $this->assertEmpty($routine->exercises);
+
+        $response = $this->actingAs($user)
+            ->putJson(
+                route('routines.update', $routine),
+                [
+                    'name' => 'Routine 2',
+                    'exercises' => [
+                        $exercise1->id => [
+                            'number_sets' => 1,
+                            'rest_seconds' => 90,
+                            'sort' => 1,
+                        ],
+                        $exercise2->id => [
+                            'number_sets' => 2,
+                            'rest_seconds' => 120,
+                            'sort' => 2,
+                        ],
+                    ]
+                ]
+            );
 
         $response->assertStatus(200);
 
         $routine->refresh();
 
         $this->assertSame('Routine 2', $routine->name);
+        $this->assertCount(2, $routine->exercises);
+
+        $exerciseRoutine1 = $routine->exercises->firstWhere('id', $exercise1->id);
+        $this->assertSame(1, $exerciseRoutine1->pivot->number_sets);
+        $this->assertSame(90, $exerciseRoutine1->pivot->rest_seconds);
+        $this->assertSame(1, $exerciseRoutine1->pivot->sort);
+
+        $exerciseRoutine2 = $routine->exercises->firstWhere('id', $exercise2->id);
+        $this->assertSame(2, $exerciseRoutine2->pivot->number_sets);
+        $this->assertSame(120, $exerciseRoutine2->pivot->rest_seconds);
+        $this->assertSame(2, $exerciseRoutine2->pivot->sort);
+
+        /** now update again to delete an exercise */
+        $response = $this->actingAs($user)
+            ->putJson(
+                route('routines.update', $routine),
+                [
+                    'name' => 'Routine 2',
+                    'exercises' => [
+                        $exercise1->id => [
+                            'number_sets' => 1,
+                            'rest_seconds' => 90,
+                            'sort' => 1,
+                        ],
+                    ]
+                ]
+            );
+
+        $response->assertStatus(200);
+
+        $routine->refresh();
+
+        $this->assertCount(1, $routine->exercises);
+
+        $exerciseRoutine1 = $routine->exercises->firstWhere('id', $exercise1->id);
+        $this->assertSame(1, $exerciseRoutine1->pivot->number_sets);
+        $this->assertSame(90, $exerciseRoutine1->pivot->rest_seconds);
+        $this->assertSame(1, $exerciseRoutine1->pivot->sort);
     }
 
     /**
@@ -109,7 +173,7 @@ class RoutineControllerTest extends TestCase
 
         $response = $this->putJson(route('routines.update', $routine), ['name' => 'Routine 2']);
 
-        $response->assertStatus(403);
+        $response->assertUnauthorized();
     }
 
     /**
@@ -161,7 +225,7 @@ class RoutineControllerTest extends TestCase
 
         $response = $this->putJson(route('routines.destroy', $routine));
 
-        $response->assertStatus(403);
+        $response->assertUnauthorized();
 
         $this->assertModelExists($routine);
     }

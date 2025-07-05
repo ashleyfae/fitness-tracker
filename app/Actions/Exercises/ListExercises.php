@@ -21,12 +21,10 @@ class ListExercises
     {
         $data = $request->validated();
 
-        $exercises = $request->user()
+        return $request->user()
             ->exercises()
             ->when(! empty($data['search']), fn(\Illuminate\Contracts\Database\Eloquent\Builder $builder) => $builder->whereLike('name', '%'.$data['search'].'%'))
             ->orderBy('name')
             ->paginate(40);
-
-        return $exercises;
     }
 }
