@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreWorkoutSessionRequest;
 use App\Models\WorkoutSession;
 use Illuminate\Http\Request;
 
@@ -18,17 +19,21 @@ class WorkoutSessionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        return view('workout-sessions.create', [
+            'routines' => $request->user()->routines()->withCount('exercises')->orderBy('name')->get(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreWorkoutSessionRequest $request)
     {
-        //
+        $workoutSession = $request->user()->workoutSessions()->create($request->validated());
+
+        return redirect()->route('workouts.edit', $workoutSession);
     }
 
     /**
@@ -44,7 +49,9 @@ class WorkoutSessionController extends Controller
      */
     public function edit(WorkoutSession $workoutSession)
     {
-        //
+        return view('workout-sessions.edit', [
+            'workoutSession' => $workoutSession,
+        ]);
     }
 
     /**

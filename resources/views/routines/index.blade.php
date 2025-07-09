@@ -16,6 +16,7 @@
             <th>Name</th>
             <th>Exercises</th>
             <th>Last completed</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -29,11 +30,23 @@
                     <td>
                         TODO
                     </td>
+                    <td>
+                        <form
+                            class="delete-form"
+                            method="POST"
+                            action="{{ route('routines.destroy', $routine) }}"
+                            data-message="Are you sure you want to delete this routine?"
+                        >
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="button danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         @else
             <tr>
-                <td colspan="3">No routines yet.</td>
+                <td colspan="4">No routines yet.</td>
             </tr>
         @endif
         </tbody>

@@ -18,5 +18,5 @@ Route::get('/', \App\Http\Controllers\HomepageController::class)->name('home');
 Route::middleware(['auth'])->group(function() {
     Route::resource('exercises', \App\Http\Controllers\ExerciseController::class);
     Route::resource('routines', \App\Http\Controllers\RoutineController::class);
-    Route::resource('sessions', \App\Models\WorkoutSession::class);
+    Route::resource('workouts', \App\Http\Controllers\WorkoutSessionController::class);
 });

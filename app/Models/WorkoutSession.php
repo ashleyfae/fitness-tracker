@@ -40,6 +40,10 @@ class WorkoutSession extends Model
         'total_kg_lifted' => 'float',
     ];
 
+    protected $fillable = [
+        'routine_id',
+    ];
+
     public function routine() : BelongsTo
     {
         return $this->belongsTo(Routine::class);

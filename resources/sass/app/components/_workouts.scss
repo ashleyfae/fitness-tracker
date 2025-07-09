@@ -1,0 +1,28 @@
+#create-workout {
+    padding-bottom: 2rem;
+    position: relative;
+}
+
+.workout-routine {
+    border-left: 6px solid transparent;
+    margin-bottom: 1.5rem;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.selected,
+    &:hover {
+        border-left-color: var(--color-primary);
+    }
+
+    input[type="radio"] {
+        display: none;
+    }
+}
+
+#create-workout-submit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

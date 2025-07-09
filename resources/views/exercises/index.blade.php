@@ -23,7 +23,12 @@
                         <a href="{{ route('exercises.edit', $exercise) }}">{{ $exercise->name }}</a>
                     </td>
                     <td>
-                        <form class="delete-exercise" method="POST" action="{{ route('exercises.destroy', $exercise) }}">
+                        <form
+                            class="delete-exercise"
+                            method="POST"
+                            action="{{ route('exercises.destroy', $exercise) }}"
+                            data-message="Are you sure you want to delete this exercise?"
+                        >
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="button danger">Delete</button>

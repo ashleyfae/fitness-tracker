@@ -1499,6 +1499,31 @@ html:not(.light) .modal {
   justify-content: space-between;
 }
 
+#create-workout {
+  padding-bottom: 2rem;
+  position: relative;
+}
+
+.workout-routine {
+  border-left: 6px solid transparent;
+  margin-bottom: 1.5rem;
+}
+.workout-routine:hover {
+  cursor: pointer;
+}
+.workout-routine.selected, .workout-routine:hover {
+  border-left-color: var(--color-primary);
+}
+.workout-routine input[type=radio] {
+  display: none;
+}
+
+#create-workout-submit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
 .text-centered {
   text-align: center !important;
 }

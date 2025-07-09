@@ -1,8 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
-@section('app')
+@section('title', 'Create Routine')
+
+@section('header')
     <h1>Create Routine</h1>
+@endsection
 
+@section('content')
     <form method="POST" action="{{ route('routines.store') }}">
         @csrf
 

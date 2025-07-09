@@ -11,18 +11,25 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 /* harmony import */ var _layout_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./layout/modals */ "./resources/js/layout/modals.js");
-/* harmony import */ var _components_exercises_delete__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/exercises/delete */ "./resources/js/components/exercises/delete.js");
-/* harmony import */ var _components_exercises_delete__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_components_exercises_delete__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_common_delete__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/common/delete */ "./resources/js/components/common/delete.js");
+/* harmony import */ var _components_common_delete__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_components_common_delete__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _components_exercises_search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/exercises/search */ "./resources/js/components/exercises/search.js");
 /* harmony import */ var _components_routines_exercises__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/routines/exercises */ "./resources/js/components/routines/exercises.js");
+/* harmony import */ var _components_workouts_index__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/workouts/index */ "./resources/js/components/workouts/index.js");
+/* harmony import */ var _components_workouts_index__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_components_workouts_index__WEBPACK_IMPORTED_MODULE_5__);
 
+
+
+// Common
 
 
 // Exercises
 
 
-
 // Routines (edit routine exercises)
+
+
+// Workouts
 
 
 /***/ }),
@@ -48,18 +55,19 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/components/exercises/delete.js":
-/*!*****************************************************!*\
-  !*** ./resources/js/components/exercises/delete.js ***!
-  \*****************************************************/
+/***/ "./resources/js/components/common/delete.js":
+/*!**************************************************!*\
+  !*** ./resources/js/components/common/delete.js ***!
+  \**************************************************/
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
-  var deleteForms = document.querySelectorAll('.delete-exercise');
+  var deleteForms = document.querySelectorAll('.delete-form');
   if (deleteForms) {
     deleteForms.forEach(function (form) {
+      var deleteMessage = form.getAttribute('data-message') || 'Are you sure you want to delete this item?';
       form.addEventListener('submit', function (e) {
-        if (!confirm('Are you sure you want to delete this exercise?')) {
+        if (!confirm(deleteMessage)) {
           e.preventDefault();
         }
       });
@@ -250,6 +258,61 @@ function formatExercise(exercise) {
   var _exercise$pivot, _exercise$pivot2, _exercise$pivot3;
   return "<div class=\"routine--exercise\">\n<div class=\"flex\">\n    <h2>".concat(exercise.name, "</h2>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sets\">Number sets</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sets\" name=\"exercises[").concat(exercise.id, "][number_sets]\" value=\"").concat(((_exercise$pivot = exercise.pivot) === null || _exercise$pivot === void 0 ? void 0 : _exercise$pivot.number_sets) || '3', "\" min=\"1\" max=\"200\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-rest\">Rest (seconds)</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-rest\" name=\"exercises[").concat(exercise.id, "][rest_seconds]\" value=\"").concat(((_exercise$pivot2 = exercise.pivot) === null || _exercise$pivot2 === void 0 ? void 0 : _exercise$pivot2.rest_seconds) || '60', "\" min=\"1\" max=\"1000\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sort\">Sort position</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sort\" name=\"exercises[").concat(exercise.id, "][sort]\" value=\"").concat((_exercise$pivot3 = exercise.pivot) === null || _exercise$pivot3 === void 0 ? void 0 : _exercise$pivot3.sort, "\" min=\"0\">\n    </div>\n</div>\n</div>");
 }
+
+/***/ }),
+
+/***/ "./resources/js/components/workouts/index.js":
+/*!***************************************************!*\
+  !*** ./resources/js/components/workouts/index.js ***!
+  \***************************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var form = document.getElementById('create-workout');
+  if (!form) {
+    return;
+  }
+  var routines = form.querySelectorAll('.workout-routine');
+  if (!routines) {
+    return;
+  }
+
+  /**
+   * Handle selecting a routine
+   * @param selectedRoutine
+   */
+  var handleRoutineSelection = function handleRoutineSelection(selectedRoutine) {
+    // Remove the "selected" class from all routines
+    routines.forEach(function (routine) {
+      routine.classList.remove('selected');
+      // Uncheck radio input
+      var radio = routine.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.checked = false;
+      }
+    });
+
+    // Add the "selected" class to the clicked routine
+    selectedRoutine.classList.add('selected');
+    // Check the radio input inside selected routine
+    var selectedRadio = selectedRoutine.querySelector('input[type="radio"]');
+    if (selectedRadio) {
+      selectedRadio.checked = true;
+    }
+  };
+  var maybeShowSubmitButton = function maybeShowSubmitButton() {
+    var submitButtonWrapper = document.getElementById('create-workout-submit');
+    if (submitButtonWrapper) {
+      submitButtonWrapper.classList.remove('hidden');
+    }
+  };
+  routines.forEach(function (routine) {
+    routine.addEventListener('click', function (e) {
+      handleRoutineSelection(routine);
+      maybeShowSubmitButton();
+    });
+  });
+});
 
 /***/ }),
 
