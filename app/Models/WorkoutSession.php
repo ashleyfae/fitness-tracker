@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -23,6 +25,7 @@ use Illuminate\Support\Carbon;
  *
  * @property User $user
  * @property Routine $routine
+ * @property WorkoutExercise
  *
  * @mixin Builder
  */
@@ -47,5 +50,13 @@ class WorkoutSession extends Model
     public function routine() : BelongsTo
     {
         return $this->belongsTo(Routine::class);
+    }
+
+    public function exercises() : BelongsToMany
+    {
+        return $this->belongsToMany(Exercise::class, 'workout_exercises')
+            ->using(WorkoutExercise::class)
+            ->withPivot(['number_sets', 'rest_seconds', 'sort', 'created_at', 'updated_at'])
+            ->orderByPivot('sort');
     }
 }
