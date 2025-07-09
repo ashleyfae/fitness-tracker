@@ -49,6 +49,12 @@ class WorkoutSessionController extends Controller
      */
     public function edit(WorkoutSession $workoutSession)
     {
+        $workoutSession->load([
+            'exercises',
+            'exercises.exercise',
+            'exercises.sets',
+        ]);
+
         return view('workout-sessions.edit', [
             'workoutSession' => $workoutSession,
         ]);

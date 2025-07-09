@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -14,8 +18,14 @@ use Illuminate\Support\Carbon;
  * @property int $sort
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property WorkoutSession $workoutSession
+ * @property Exercise $exercise
+ * @property WorkoutSet[]|Collection $sets
+ *
+ * @mixin Builder
  */
-class WorkoutExercise extends Pivot
+class WorkoutExercise extends Model
 {
     public $incrementing = true;
 
@@ -26,4 +36,19 @@ class WorkoutExercise extends Pivot
         'rest_seconds' => 'integer',
         'sort' => 'integer',
     ];
+
+    public function workoutSession() : BelongsTo
+    {
+        return $this->belongsTo(WorkoutSession::class);
+    }
+
+    public function exercise() : BelongsTo
+    {
+        return $this->belongsTo(Exercise::class);
+    }
+
+    public function sets() : HasMany
+    {
+        return $this->hasMany(WorkoutSet::class);
+    }
 }
