@@ -109,12 +109,12 @@ class RoutineControllerTest extends TestCase
         $exerciseRoutine1 = $routine->exercises->firstWhere('id', $exercise1->id);
         $this->assertSame(1, $exerciseRoutine1->pivot->number_sets);
         $this->assertSame(90, $exerciseRoutine1->pivot->rest_seconds);
-        $this->assertSame(1, $exerciseRoutine1->pivot->sort);
+        $this->assertSame(0, $exerciseRoutine1->pivot->sort);
 
         $exerciseRoutine2 = $routine->exercises->firstWhere('id', $exercise2->id);
         $this->assertSame(2, $exerciseRoutine2->pivot->number_sets);
         $this->assertSame(120, $exerciseRoutine2->pivot->rest_seconds);
-        $this->assertSame(2, $exerciseRoutine2->pivot->sort);
+        $this->assertSame(1, $exerciseRoutine2->pivot->sort);
 
         /** now update again to delete an exercise */
         $response = $this->actingAs($user)
@@ -141,7 +141,7 @@ class RoutineControllerTest extends TestCase
         $exerciseRoutine1 = $routine->exercises->firstWhere('id', $exercise1->id);
         $this->assertSame(1, $exerciseRoutine1->pivot->number_sets);
         $this->assertSame(90, $exerciseRoutine1->pivot->rest_seconds);
-        $this->assertSame(1, $exerciseRoutine1->pivot->sort);
+        $this->assertSame(0, $exerciseRoutine1->pivot->sort);
     }
 
     /**
