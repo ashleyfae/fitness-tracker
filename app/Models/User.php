@@ -12,6 +12,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property int $id
+ * @property string $name
+ * @property string $email
  * @property Exercise[]|Collection $exercises
  * @property Routine[]|Collection $routines
  * @property WorkoutSession[]|Collection $workoutSessions
