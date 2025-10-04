@@ -1,8 +1,8 @@
 <?php
+
 /**
  * BelongsToUser.php
  *
- * @package   fitness-tracker
  * @copyright Copyright (c) 2023, Ashley Gibson
  * @license   MIT
  */
@@ -16,7 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property User $user
  */
-trait BelongsToUser {
+trait BelongsToUser
+{
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

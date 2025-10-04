@@ -8,10 +8,8 @@ class UpdateExerciseRequest extends StoreExerciseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         $exercise = $this->route('exercise');
 

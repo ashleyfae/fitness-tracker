@@ -1,8 +1,8 @@
 <?php
+
 /**
  * CanGetInaccessibleMembers.php
  *
- * @package   fitness-tracker
  * @copyright Copyright (c) 2025, Ashley Gibson
  * @license   MIT
  */
@@ -22,7 +22,6 @@ trait CanGetInaccessibleMembers
      * @param  string|object  $class  Class name or instance of it.
      * @param  string  $methodName  Name of the method.
      *
-     * @return ReflectionMethod
      * @throws ReflectionException
      */
     protected function getInaccessibleMethod(string|object $class, string $methodName): ReflectionMethod
@@ -41,7 +40,6 @@ trait CanGetInaccessibleMembers
      * @param  string  $methodName  Name of the method.
      * @param  mixed  ...$args  Arguments to pass to the method.
      *
-     * @return mixed
      * @throws ReflectionException
      */
     protected function invokeInaccessibleMethod($class, string $methodName, ...$args): mixed
@@ -56,7 +54,6 @@ trait CanGetInaccessibleMembers
      * @param  string|object  $class  Class name or instance of it.
      * @param  string  $propertyName  Name of the property.
      *
-     * @return ReflectionProperty
      * @throws ReflectionException
      */
     protected function getInaccessibleProperty(string|object $class, string $propertyName): ReflectionProperty
@@ -75,7 +72,6 @@ trait CanGetInaccessibleMembers
      * @param  string  $propertyName  Name of the property.
      * @param  mixed  $propertyValue  Desired property value.
      *
-     * @return void
      * @throws ReflectionException
      */
     protected function setInaccessibleProperty(object $classInstance, string $propertyName, $propertyValue): void

@@ -12,20 +12,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @property int $id
  * @property string $name
- *
  * @property Exercise[]|Collection $exercises
  *
  * @mixin Builder
  */
 class Routine extends Model
 {
-    use HasFactory, BelongsToUser;
+    use BelongsToUser, HasFactory;
 
     protected $fillable = [
         'name',
     ];
 
-    public function exercises() : BelongsToMany
+    public function exercises(): BelongsToMany
     {
         return $this->belongsToMany(Exercise::class)
             ->using(ExerciseRoutine::class)

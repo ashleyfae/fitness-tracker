@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Routine::class)->constrained()->cascadeOnDelete();
             $table->timestamp('started_at')->useCurrent();
             $table->timestamp('ended_at')->nullable();
-            $table->integer('duration_seconds')->nullable()->storedAs("CASE WHEN ended_at IS NULL THEN null ELSE EXTRACT(EPOCH FROM (ended_at - started_at))::integer END");
+            $table->integer('duration_seconds')->nullable()->storedAs('CASE WHEN ended_at IS NULL THEN null ELSE EXTRACT(EPOCH FROM (ended_at - started_at))::integer END');
             $table->unsignedInteger('total_exercises')->default(0);
             $table->float('total_kg_lifted', 2)->default(0);
             $table->timestamps();

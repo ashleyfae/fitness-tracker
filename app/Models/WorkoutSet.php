@@ -32,7 +32,7 @@ class WorkoutSet extends Model
         'completed_at',
     ];
 
-    public function isComplete() : bool
+    public function isComplete(): bool
     {
         return $this->completed_at !== null;
     }

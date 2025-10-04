@@ -15,13 +15,13 @@ use Illuminate\Support\Carbon;
  * @property ?string $image_path
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property ExerciseRoutine|null $pivot
+ *
  * @mixin Builder
  */
 class Exercise extends Model
 {
-    use HasFactory, BelongsToUser;
+    use BelongsToUser, HasFactory;
 
     protected $fillable = [
         'name',

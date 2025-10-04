@@ -7,5 +7,5 @@ use Tests\Traits\CanGetInaccessibleMembers;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, CanGetInaccessibleMembers;
+    use CanGetInaccessibleMembers, CreatesApplication;
 }

@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        foreach($exercises as $exerciseArgs) {
+        foreach ($exercises as $exerciseArgs) {
             Exercise::factory()->for($user)->create($exerciseArgs);
         }
     }

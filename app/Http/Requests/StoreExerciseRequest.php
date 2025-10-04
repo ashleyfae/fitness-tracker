@@ -9,10 +9,8 @@ class StoreExerciseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return auth()->check() && auth()->user()->can('create', Exercise::class);
     }
@@ -22,7 +20,7 @@ class StoreExerciseRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],

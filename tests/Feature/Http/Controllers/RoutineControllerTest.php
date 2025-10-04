@@ -18,9 +18,10 @@ class RoutineControllerTest extends TestCase
 
     /**
      * @covers \App\Http\Controllers\RoutineController::store()
+     *
      * @dataProvider providerCanStore
      */
-    public function testUserCanStore(array $postData, int $expectedResponseCode): void
+    public function test_user_can_store(array $postData, int $expectedResponseCode): void
     {
         $user = User::factory()->create();
 
@@ -36,7 +37,7 @@ class RoutineControllerTest extends TestCase
     }
 
     /** @see testUserCanStore */
-    public static function providerCanStore() : Generator
+    public static function providerCanStore(): Generator
     {
         yield 'name is 201' => [
             'postData' => [
@@ -54,7 +55,7 @@ class RoutineControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\RoutineController::store()
      */
-    public function testGuestCannotStore(): void
+    public function test_guest_cannot_store(): void
     {
         $response = $this->postJson(route('routines.store'), ['name' => 'Routine']);
 
@@ -64,7 +65,7 @@ class RoutineControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\RoutineController::update()
      */
-    public function testUserCanUpdate(): void
+    public function test_user_can_update(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -94,7 +95,7 @@ class RoutineControllerTest extends TestCase
                             'rest_seconds' => 120,
                             'sort' => 2,
                         ],
-                    ]
+                    ],
                 ]
             );
 
@@ -127,7 +128,7 @@ class RoutineControllerTest extends TestCase
                             'rest_seconds' => 90,
                             'sort' => 1,
                         ],
-                    ]
+                    ],
                 ]
             );
 
@@ -146,7 +147,7 @@ class RoutineControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\RoutineController::update()
      */
-    public function testUserCannotUpdateOtherUsersRoutine(): void
+    public function test_user_cannot_update_other_users_routine(): void
     {
         /** @var User $user1 */
         $user1 = User::factory()->create();
@@ -163,7 +164,7 @@ class RoutineControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\RoutineController::update()
      */
-    public function testGuestCannotUpdate(): void
+    public function test_guest_cannot_update(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -179,7 +180,7 @@ class RoutineControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\RoutineController::destroy()
      */
-    public function testUserCanDestroy(): void
+    public function test_user_can_destroy(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -196,7 +197,7 @@ class RoutineControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\RoutineController::destroy()
      */
-    public function testUserCannotDestroyOtherUsersRoutine(): void
+    public function test_user_cannot_destroy_other_users_routine(): void
     {
         /** @var User $user1 */
         $user1 = User::factory()->create();
@@ -215,7 +216,7 @@ class RoutineControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\RoutineController::destroy()
      */
-    public function testGuestCannotDestroy(): void
+    public function test_guest_cannot_destroy(): void
     {
         /** @var User $user */
         $user = User::factory()->create();

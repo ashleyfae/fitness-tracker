@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 /**
@@ -14,7 +12,7 @@ class HomepageControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\HomepageController::__invoke()
      */
-    public function testCanRedirectToRoutines(): void
+    public function test_can_redirect_to_routines(): void
     {
         $response = $this->get(route('home'));
 

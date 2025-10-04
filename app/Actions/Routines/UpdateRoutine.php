@@ -1,8 +1,8 @@
 <?php
+
 /**
  * UpdateRoutine.php
  *
- * @package   fitness-tracker
  * @copyright Copyright (c) 2025, Ashley Gibson
  * @license   MIT
  */
@@ -14,7 +14,7 @@ use App\Models\Routine;
 
 class UpdateRoutine
 {
-    public function execute(Routine $routine, UpdateRoutineRequest $request) : Routine
+    public function execute(Routine $routine, UpdateRoutineRequest $request): Routine
     {
         $data = $request->validated();
 

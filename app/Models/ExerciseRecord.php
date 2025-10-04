@@ -16,7 +16,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon $achieved_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property User $user
  * @property Exercise $exercise
  *

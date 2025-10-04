@@ -19,7 +19,7 @@ class ExerciseControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\ExerciseController::index()
      */
-    public function testUserCanList(): void
+    public function test_user_can_list(): void
     {
         $user = User::factory()->create();
         $exercises = Exercise::factory()->for($user)->count(10)->create();
@@ -38,9 +38,10 @@ class ExerciseControllerTest extends TestCase
 
     /**
      * @covers \App\Http\Controllers\ExerciseController::store()
+     *
      * @dataProvider providerCanStore
      */
-    public function testUserCanStore(array $postData, int $expectedResponseCode): void
+    public function test_user_can_store(array $postData, int $expectedResponseCode): void
     {
         Storage::fake();
 
@@ -69,7 +70,7 @@ class ExerciseControllerTest extends TestCase
     }
 
     /** @see testUserCanStore */
-    public static function providerCanStore() : \Generator
+    public static function providerCanStore(): \Generator
     {
         yield 'name and description is 201' => [
             'postData' => [
@@ -90,7 +91,7 @@ class ExerciseControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\ExerciseController::store()
      */
-    public function testGuestCannotStore(): void
+    public function test_guest_cannot_store(): void
     {
         $response = $this->postJson(route('exercises.store'), ['name' => 'Exercise']);
 
@@ -100,7 +101,7 @@ class ExerciseControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\ExerciseController::update()
      */
-    public function testUserCanUpdate(): void
+    public function test_user_can_update(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -119,7 +120,7 @@ class ExerciseControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\ExerciseController::update()
      */
-    public function testUserCannotUpdateOtherUsersExercise(): void
+    public function test_user_cannot_update_other_users_exercise(): void
     {
         /** @var User $user1 */
         $user1 = User::factory()->create();
@@ -136,7 +137,7 @@ class ExerciseControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\ExerciseController::update()
      */
-    public function testGuestCannotUpdate(): void
+    public function test_guest_cannot_update(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -152,7 +153,7 @@ class ExerciseControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\ExerciseController::destroy()
      */
-    public function testUserCanDestroy(): void
+    public function test_user_can_destroy(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -169,7 +170,7 @@ class ExerciseControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\ExerciseController::destroy()
      */
-    public function testUserCannotDestroyOtherUsersExercise(): void
+    public function test_user_cannot_destroy_other_users_exercise(): void
     {
         /** @var User $user1 */
         $user1 = User::factory()->create();
@@ -188,7 +189,7 @@ class ExerciseControllerTest extends TestCase
     /**
      * @covers \App\Http\Controllers\ExerciseController::destroy()
      */
-    public function testGuestCannotDestroy(): void
+    public function test_guest_cannot_destroy(): void
     {
         /** @var User $user */
         $user = User::factory()->create();

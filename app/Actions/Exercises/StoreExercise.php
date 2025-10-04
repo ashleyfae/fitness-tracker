@@ -1,8 +1,8 @@
 <?php
+
 /**
  * StoreExercise.php
  *
- * @package   fitness-tracker
  * @copyright Copyright (c) 2023, Ashley Gibson
  * @license   MIT
  */

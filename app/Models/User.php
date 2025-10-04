@@ -53,22 +53,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function exercises() : HasMany
+    public function exercises(): HasMany
     {
         return $this->hasMany(Exercise::class);
     }
 
-    public function routines() : HasMany
+    public function routines(): HasMany
     {
         return $this->hasMany(Routine::class);
     }
 
-    public function workoutSessions() : HasMany
+    public function workoutSessions(): HasMany
     {
         return $this->hasMany(WorkoutSession::class);
     }
 
-    public function exerciseRecords() : HasMany
+    public function exerciseRecords(): HasMany
     {
         return $this->hasMany(ExerciseRecord::class);
     }

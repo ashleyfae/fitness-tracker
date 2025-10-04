@@ -21,7 +21,7 @@ class RoutineController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) : JsonResponse|View
+    public function index(Request $request): JsonResponse|View
     {
         $routines = $request
             ->user()
@@ -42,15 +42,15 @@ class RoutineController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create() : View
+    public function create(): View
     {
-        return view('routines.create', ['routine' => new Routine()]);
+        return view('routines.create', ['routine' => new Routine]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRoutineRequest $request) : JsonResponse|RedirectResponse
+    public function store(StoreRoutineRequest $request): JsonResponse|RedirectResponse
     {
         $routine = $request->user()->routines()->create($request->validated());
 
@@ -64,7 +64,7 @@ class RoutineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Routine $routine) : JsonResponse
+    public function show(Request $request, Routine $routine): JsonResponse
     {
         $routine->load('exercises');
 
@@ -74,7 +74,7 @@ class RoutineController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, Routine $routine) : View
+    public function edit(Request $request, Routine $routine): View
     {
         return view('routines.edit', ['routine' => $routine]);
     }
@@ -82,7 +82,7 @@ class RoutineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoutineRequest $request, Routine $routine, UpdateRoutine $updateRoutine) : JsonResponse|RedirectResponse
+    public function update(UpdateRoutineRequest $request, Routine $routine, UpdateRoutine $updateRoutine): JsonResponse|RedirectResponse
     {
         $updateRoutine->execute($routine, $request);
 
@@ -98,7 +98,7 @@ class RoutineController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Routine $routine) : JsonResponse|RedirectResponse
+    public function destroy(Request $request, Routine $routine): JsonResponse|RedirectResponse
     {
         $routine->delete();
 

@@ -24,7 +24,7 @@ class ExerciseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(ListExercisesRequest $request, ListExercises $listExercises) : JsonResponse|View
+    public function index(ListExercisesRequest $request, ListExercises $listExercises): JsonResponse|View
     {
         $exercises = $listExercises->fromRequest($request);
 
@@ -38,9 +38,9 @@ class ExerciseController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create() : Response|View
+    public function create(): Response|View
     {
-        return view('exercises.create', ['exercise' => new Exercise()]);
+        return view('exercises.create', ['exercise' => new Exercise]);
     }
 
     /**
@@ -62,7 +62,7 @@ class ExerciseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Exercise $exercise) : JsonResponse|View
+    public function show(Request $request, Exercise $exercise): JsonResponse|View
     {
         if ($request->wantsJson()) {
             return response()->json($exercise->toArray());
@@ -72,7 +72,7 @@ class ExerciseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Exercise $exercise) : JsonResponse|View
+    public function edit(Exercise $exercise): JsonResponse|View
     {
         //
     }
@@ -80,7 +80,7 @@ class ExerciseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExerciseRequest $request, Exercise $exercise) : JsonResponse|RedirectResponse
+    public function update(UpdateExerciseRequest $request, Exercise $exercise): JsonResponse|RedirectResponse
     {
         $exercise->update($request->validated());
 
@@ -94,7 +94,7 @@ class ExerciseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Exercise $exercise) : JsonResponse|RedirectResponse
+    public function destroy(Request $request, Exercise $exercise): JsonResponse|RedirectResponse
     {
         $exercise->delete();
 

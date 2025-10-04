@@ -3,15 +3,13 @@
 namespace Tests\Feature\Actions\Routines;
 
 use App\Actions\Routines\UpdateRoutine;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 #[CoversClass(UpdateRoutine::class)]
 class UpdateRoutineTest extends TestCase
 {
-    public function testCanNormalizeExercises() : void
+    public function test_can_normalize_exercises(): void
     {
         $exercises = [
             3 => [
@@ -59,7 +57,7 @@ class UpdateRoutineTest extends TestCase
                     'sort' => 3,
                 ],
             ],
-            $this->invokeInaccessibleMethod(new UpdateRoutine(), 'normalizeExercises', $exercises)
+            $this->invokeInaccessibleMethod(new UpdateRoutine, 'normalizeExercises', $exercises)
         );
     }
 }

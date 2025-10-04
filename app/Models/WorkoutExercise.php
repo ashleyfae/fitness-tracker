@@ -18,7 +18,6 @@ use Illuminate\Support\Carbon;
  * @property int $sort
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property WorkoutSession $workoutSession
  * @property Exercise $exercise
  * @property WorkoutSet[]|Collection $sets
@@ -37,17 +36,17 @@ class WorkoutExercise extends Model
         'sort' => 'integer',
     ];
 
-    public function workoutSession() : BelongsTo
+    public function workoutSession(): BelongsTo
     {
         return $this->belongsTo(WorkoutSession::class);
     }
 
-    public function exercise() : BelongsTo
+    public function exercise(): BelongsTo
     {
         return $this->belongsTo(Exercise::class);
     }
 
-    public function sets() : HasMany
+    public function sets(): HasMany
     {
         return $this->hasMany(WorkoutSet::class);
     }
