@@ -15,6 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Exercise[]|Collection $exercises
  * @property Routine[]|Collection $routines
  * @property WorkoutSession[]|Collection $workoutSessions
+ * @property ExerciseRecord[]|Collection $exerciseRecords
  *
  * @mixin Builder
  */
@@ -65,5 +66,10 @@ class User extends Authenticatable
     public function workoutSessions() : HasMany
     {
         return $this->hasMany(WorkoutSession::class);
+    }
+
+    public function exerciseRecords() : HasMany
+    {
+        return $this->hasMany(ExerciseRecord::class);
     }
 }
