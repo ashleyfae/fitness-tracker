@@ -70,6 +70,7 @@ class ImportDataCommandTest extends TestCase
     /** @test */
     public function it_imports_custom_exercises(): void
     {
+        $this->createAllRequiredCsvFiles();
         $this->createTestCsv('custom-exercises.csv', [
             'row_id,USERID,TIMESTAMP,rating,name,description',
             '1,123,"2024-01-01",5,"Barbell Shrug","A shrug exercise"',
@@ -97,6 +98,7 @@ class ImportDataCommandTest extends TestCase
     /** @test */
     public function it_supports_dry_run_mode(): void
     {
+        $this->createAllRequiredCsvFiles();
         $this->createTestCsv('custom-exercises.csv', [
             'row_id,USERID,TIMESTAMP,rating,name,description',
             '1,123,"2024-01-01",5,"Barbell Shrug","A shrug exercise"',
@@ -118,6 +120,7 @@ class ImportDataCommandTest extends TestCase
     /** @test */
     public function it_allows_cancelling_import(): void
     {
+        $this->createAllRequiredCsvFiles();
         $this->createTestCsv('custom-exercises.csv', [
             'row_id,USERID,TIMESTAMP,rating,name,description',
             '1,123,"2024-01-01",5,"Barbell Shrug","A shrug exercise"',
@@ -137,6 +140,7 @@ class ImportDataCommandTest extends TestCase
     /** @test */
     public function it_displays_import_summary(): void
     {
+        $this->createAllRequiredCsvFiles();
         $this->createTestCsv('custom-exercises.csv', [
             'row_id,USERID,TIMESTAMP,rating,name,description',
             '1,123,"2024-01-01",5,"Exercise 1","Description"',
@@ -161,6 +165,7 @@ class ImportDataCommandTest extends TestCase
         // Create user with ID 1
         User::factory()->create(['id' => 1, 'name' => 'Default User']);
 
+        $this->createAllRequiredCsvFiles();
         $this->createTestCsv('custom-exercises.csv', [
             'row_id,USERID,TIMESTAMP,rating,name,description',
             '1,123,"2024-01-01",5,"Exercise 1","Description"',
@@ -179,5 +184,15 @@ class ImportDataCommandTest extends TestCase
     {
         $path = $this->testDir.'/'.$filename;
         File::put($path, implode("\n", $lines));
+    }
+
+    private function createAllRequiredCsvFiles(): void
+    {
+        // Create empty CSV files for all required imports (except custom-exercises which tests will create)
+        $this->createTestCsv('routine-days.csv', ['row_id,USERID,TIMESTAMP,package,_id,name']);
+        $this->createTestCsv('routine-exercises.csv', ['row_id,USERID,TIMESTAMP,belongSys,superset,_id,exercise_id,belongplan,exercisename,setcount,timer,mysort']);
+        $this->createTestCsv('workout-sessions.csv', ['rowid,_id,USERID,day_id,starttime,endtime,total_time,total_exercise,total_weight']);
+        $this->createTestCsv('exercise-logs.csv', ['USERID,TIMESTAMP,belongSys,logs,_id,eid,ename,belongsession,day_item_id,logTime']);
+        $this->createTestCsv('exercise-records.csv', ['row_id,USERID,TIMESTAMP,_id,eid,record,recordReachTime']);
     }
 }

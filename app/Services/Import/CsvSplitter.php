@@ -210,7 +210,7 @@ class CsvSplitter
         if (! empty($routineDays)) {
             $results['ROUTINE_DAYS'] = $this->writeCsv(
                 'routine-days.csv',
-                str_getcsv('package,_id,name,day,dayIndex,interval_mode,rest_day,week,sort_order'),
+                str_getcsv('row_id,USERID,TIMESTAMP,package,_id,name,day,dayIndex,interval_mode,rest_day,week,sort_order'),
                 $routineDays
             );
         }
@@ -219,7 +219,7 @@ class CsvSplitter
         if (! empty($routineExercises)) {
             $results['ROUTINE_EXERCISES'] = $this->writeCsv(
                 'routine-exercises.csv',
-                str_getcsv('belongSys,superset,_id,exercise_id,belongplan,exercisename,setcount,timer,logs,bodypart,mysort,targetrep,setdone,setdonetime,interval_time,interval_unit,rest_time_enabled,interval_time_enabled'),
+                str_getcsv('row_id,USERID,TIMESTAMP,belongSys,superset,_id,exercise_id,belongplan,exercisename,setcount,timer,logs,bodypart,mysort,targetrep,setdone,setdonetime,interval_time,interval_unit,rest_time_enabled,interval_time_enabled'),
                 $routineExercises
             );
         }

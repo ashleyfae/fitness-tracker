@@ -6,6 +6,11 @@ use App\Models\User;
 use App\Services\Import\IdMapper;
 use App\Services\Import\Importers\BaseImporter;
 use App\Services\Import\Importers\CustomExerciseImporter;
+use App\Services\Import\Importers\ExerciseLogImporter;
+use App\Services\Import\Importers\ExerciseRecordImporter;
+use App\Services\Import\Importers\RoutineDayImporter;
+use App\Services\Import\Importers\RoutineExerciseImporter;
+use App\Services\Import\Importers\WorkoutSessionImporter;
 use App\Services\Import\TimestampConverter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -55,6 +60,11 @@ class ImportDataCommand extends Command
         // Define expected CSV files
         $csvFiles = [
             'custom-exercises' => "{$inputDir}/custom-exercises.csv",
+            'routine-days' => "{$inputDir}/routine-days.csv",
+            'routine-exercises' => "{$inputDir}/routine-exercises.csv",
+            'workout-sessions' => "{$inputDir}/workout-sessions.csv",
+            'exercise-logs' => "{$inputDir}/exercise-logs.csv",
+            'exercise-records' => "{$inputDir}/exercise-records.csv",
         ];
 
         // Validate CSV files exist
@@ -142,7 +152,31 @@ class ImportDataCommand extends Command
                 'csv' => $csvFiles['custom-exercises'],
                 'label' => 'custom exercises',
             ],
-            // Future importers will be added here
+            [
+                'class' => RoutineDayImporter::class,
+                'csv' => $csvFiles['routine-days'],
+                'label' => 'routine days',
+            ],
+            [
+                'class' => RoutineExerciseImporter::class,
+                'csv' => $csvFiles['routine-exercises'],
+                'label' => 'routine exercises',
+            ],
+            [
+                'class' => WorkoutSessionImporter::class,
+                'csv' => $csvFiles['workout-sessions'],
+                'label' => 'workout sessions',
+            ],
+            [
+                'class' => ExerciseLogImporter::class,
+                'csv' => $csvFiles['exercise-logs'],
+                'label' => 'exercise logs',
+            ],
+            [
+                'class' => ExerciseRecordImporter::class,
+                'csv' => $csvFiles['exercise-records'],
+                'label' => 'exercise records',
+            ],
         ];
 
         foreach ($importers as $config) {
@@ -175,8 +209,19 @@ class ImportDataCommand extends Command
         if (count($errors) > 0) {
             $errorWord = Str::plural('error', count($errors));
             $this->warn('  ⚠ '.count($errors)." {$errorWord} occurred");
-            foreach ($errors as $error) {
-                $this->line("    - Row {$error['row']}: {$error['message']}");
+
+            // Show first 10 errors
+            $displayErrors = array_slice($errors, 0, 10);
+            foreach ($displayErrors as $error) {
+                $message = $error['message'];
+                if (isset($error['exception'])) {
+                    $message .= ': '.$error['exception'];
+                }
+                $this->line("    - Row {$error['row']}: {$message}");
+            }
+
+            if (count($errors) > 10) {
+                $this->line('    ... and '.(count($errors) - 10).' more errors');
             }
         }
 
