@@ -4,7 +4,7 @@
 @section('title', 'Workout Session')
 
 @section('header')
-    <h1>Workout: {{ $workoutSession->routine->name }}</h1>
+    <h1>Workout: {{ $workoutSession->routine?->name ?? 'Unknown Workout' }}</h1>
 @endsection
 
 @section('content')

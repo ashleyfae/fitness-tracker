@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property int $user_id
- * @property int $routine_id
+ * @property int|null $routine_id ONLY null for backwards-compat reasons
  * @property Carbon $started_at
  * @property Carbon|null $ended_at
  * @property int|null $duration_seconds
@@ -23,7 +23,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property User $user
- * @property Routine $routine
+ * @property Routine|null $routine
  * @property WorkoutExercise[]|Collection $exercises
  *
  * @mixin Builder
