@@ -113,12 +113,12 @@ class SplitCsvCommand extends Command
 
 ### Tests to Write
 
-#### `tests/Unit/Services/Import/CsvSplitterTest.php`
+#### `tests/Feature/Services/Import/CsvSplitterTest.php`
 
 ```php
 <?php
 
-namespace Tests\Unit\Services\Import;
+namespace Tests\Feature\Services\Import;
 
 use App\Services\Import\CsvSplitter;
 use Tests\TestCase;
@@ -469,12 +469,12 @@ class ImportDataCommand extends Command
 
 ### Tests to Write
 
-#### `tests/Unit/Services/Import/IdMapperTest.php`
+#### `tests/Feature/Services/Import/IdMapperTest.php`
 
 ```php
 <?php
 
-namespace Tests\Unit\Services\Import;
+namespace Tests\Feature\Services\Import;
 
 use App\Services\Import\IdMapper;
 use Tests\TestCase;
@@ -541,12 +541,12 @@ class IdMapperTest extends TestCase
 }
 ```
 
-#### `tests/Unit/Services/Import/TimestampConverterTest.php`
+#### `tests/Feature/Services/Import/TimestampConverterTest.php`
 
 ```php
 <?php
 
-namespace Tests\Unit\Services\Import;
+namespace Tests\Feature\Services\Import;
 
 use App\Services\Import\TimestampConverter;
 use Tests\TestCase;
@@ -579,12 +579,12 @@ class TimestampConverterTest extends TestCase
 }
 ```
 
-#### `tests/Unit/Services/Import/Importers/CustomExerciseImporterTest.php`
+#### `tests/Feature/Services/Import/Importers/CustomExerciseImporterTest.php`
 
 ```php
 <?php
 
-namespace Tests\Unit\Services\Import\Importers;
+namespace Tests\Feature\Services\Import\Importers;
 
 use App\Models\User;
 use App\Services\Import\IdMapper;
@@ -1026,21 +1026,27 @@ private function getImporters(): array
 ### Tests to Write
 
 #### For Each Importer (6 total):
-- Unit test: validation
-- Unit test: row transformation
-- Unit test: import creates records
-- Unit test: ID mapping works
-- Integration test: full import with dependencies
+- Feature test: validation
+- Feature test: row transformation
+- Feature test: import creates records
+- Feature test: ID mapping works
+- Feature test: full import with dependencies
 
-#### `tests/Unit/Services/Import/LogsParserTest.php`
+#### `tests/Feature/Services/Import/LogsParserTest.php`
+
+Note: LogsParser could potentially be a true Unit test if it doesn't use any Laravel features - just pure string parsing logic. Consider making this `tests/Unit/Services/Import/LogsParserTest.php` and extending `PHPUnit\Framework\TestCase` directly if the parser is framework-independent.
 
 ```php
 <?php
 
-namespace Tests\Unit\Services\Import;
+namespace Tests\Feature\Services\Import;
 
 use App\Services\Import\LogsParser;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
+
+// Note: If LogsParser is pure PHP with no Laravel dependencies,
+// this could be a true Unit test extending PHPUnit\Framework\TestCase
+// instead of Laravel's Tests\TestCase
 
 class LogsParserTest extends TestCase
 {
@@ -1108,15 +1114,23 @@ class LogsParserTest extends TestCase
 
 ## Testing Strategy
 
-### Unit Tests
-- Test each service in isolation
-- Mock dependencies
-- Focus on single responsibility
+### Test Organization Guidelines
 
-### Integration Tests
-- Test importers with real database
-- Use RefreshDatabase trait
-- Create minimal test CSV files
+**Feature Tests** (`tests/Feature/`):
+- Tests that use Laravel's `TestCase`
+- Tests that use Laravel facades, helpers, or framework features
+- Tests that interact with the database, filesystem, etc.
+- Integration tests that test multiple components together
+
+**Unit Tests** (`tests/Unit/`):
+- Pure PHP tests extending `PHPUnit\Framework\TestCase`
+- No Laravel framework dependencies
+- Test single classes/methods in isolation
+- Use dependency injection and mocking for external dependencies
+
+**For this import system:**
+- Most tests will be Feature tests since we use Laravel's File facade, database, etc.
+- True Unit tests would only test pure logic (e.g., parsing algorithms without filesystem)
 
 ### Manual Testing Checklist
 
