@@ -28,6 +28,13 @@ class WorkoutExercise extends Model
 {
     public $incrementing = true;
 
+    protected $fillable = [
+        'exercise_id',
+        'number_sets',
+        'rest_seconds',
+        'sort',
+    ];
+
     protected $casts = [
         'workout_session_id' => 'integer',
         'exercise_id' => 'integer',

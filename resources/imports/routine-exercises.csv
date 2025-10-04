@@ -1,4 +1,4 @@
-belongSys,superset,_id,exercise_id,belongplan,exercisename,setcount,timer,logs,bodypart,mysort,targetrep,setdone,setdonetime,interval_time,interval_unit,rest_time_enabled,interval_time_enabled
+row_id,USERID,TIMESTAMP,belongSys,superset,_id,exercise_id,belongplan,exercisename,setcount,timer,logs,bodypart,mysort,targetrep,setdone,setdonetime,interval_time,interval_unit,rest_time_enabled,interval_time_enabled
 865331847,3773197,"2025-01-29 10:33:43",1,0,184,93,21,"Barbell Deadlift",4,120,"30x9,30x10,30x10",1,0,8,0,1738059610,0,0,1,0
 514993749,3773197,"2025-01-29 10:33:43",1,0,123,83,21,"Pull Ups",3,90,0.5x3,1,1,8,0,1737110406,0,0,1,0
 865331848,3773197,"2025-01-29 10:33:43",1,0,185,3,21,"Barbell Bent Over Row",5,90,"20x10,20x10,20x12,20x10",1,2,8,0,1711277293,0,0,1,0

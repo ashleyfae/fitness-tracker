@@ -1,4 +1,4 @@
-package,_id,name,day,dayIndex,interval_mode,rest_day,week,sort_order
+row_id,USERID,TIMESTAMP,package,_id,name,day,dayIndex,interval_mode,rest_day,week,sort_order
 46743798,3773197,"2025-01-29 10:33:43",1,21,"PPL - Pull ",8,2,0,0,0,0
 46777549,3773197,"2025-01-29 10:33:43",1,22,"PPL - Push",8,1,0,0,0,0
 46777550,3773197,"2025-01-29 10:33:43",1,23,"PPL - Leg",8,3,0,0,0,0

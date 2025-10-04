@@ -9,6 +9,8 @@ class ExerciseLogImporter extends BaseImporter
 {
     private LogsParser $logsParser;
 
+    private array $importedCombinations = [];
+
     public function __construct($user, $mapper, $timestampConverter, $csvPath)
     {
         parent::__construct($user, $mapper, $timestampConverter, $csvPath);
@@ -37,6 +39,11 @@ class ExerciseLogImporter extends BaseImporter
      */
     protected function importRow(array $row): void
     {
+        // Skip logs not associated with a session
+        if (empty($row['belongsession']) || $row['belongsession'] === '0') {
+            return;
+        }
+
         // Store exercise ID => name mapping if not already present
         if (! $this->mapper->hasExerciseName((int) $row['eid'])) {
             $this->mapper->mapExerciseName((int) $row['eid'], $row['ename']);
@@ -47,6 +54,13 @@ class ExerciseLogImporter extends BaseImporter
 
         // Get session ID from mapper
         $sessionId = $this->mapper->getSessionId((int) $row['belongsession']);
+
+        // Skip duplicate (session, exercise) combinations
+        $combination = "{$sessionId}_{$exercise->id}";
+        if (isset($this->importedCombinations[$combination])) {
+            return;
+        }
+        $this->importedCombinations[$combination] = true;
 
         // Parse logs to get sets
         $sets = $this->logsParser->parse($row['logs']);
