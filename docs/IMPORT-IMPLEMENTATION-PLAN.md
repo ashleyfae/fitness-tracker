@@ -267,14 +267,14 @@ namespace App\Services\Import;
 
 class IdMapper
 {
-    private array $exerciseMap = [];
+    private array $exerciseNameMap = []; // old_exercise_id => exercise_name
     private array $routineMap = [];
     private array $sessionMap = [];
 
-    // Exercise mappings
-    public function mapExercise(int $oldId, int $newId): void;
-    public function getExerciseId(int $oldId): int;
-    public function hasExercise(int $oldId): bool;
+    // Exercise name mappings (temporary, for lookup only)
+    public function mapExerciseName(int $oldId, string $exerciseName): void;
+    public function getExerciseName(int $oldId): string;
+    public function hasExerciseName(int $oldId): bool;
 
     // Routine mappings
     public function mapRoutine(int $oldId, int $newId): void;
@@ -295,6 +295,11 @@ class IdMapper
 **Features:**
 - Throw exception if old ID not found in map
 - `getCounts()` returns stats for each map type
+
+**Exercise Name Mapping Strategy:**
+- Store `old_exercise_id => exercise_name` during routine/log imports
+- Use name to `firstOrCreate()` exercises as needed
+- This allows us to handle exercise-records.csv which only has old IDs
 
 #### 2. `app/Services/Import/TimestampConverter.php`
 
@@ -490,53 +495,76 @@ class IdMapperTest extends TestCase
     }
 
     /** @test */
-    public function it_maps_exercise_ids(): void
-    {
-        $this->mapper->mapExercise(12, 1);
-
-        $this->assertEquals(1, $this->mapper->getExerciseId(12));
-        $this->assertTrue($this->mapper->hasExercise(12));
-    }
-
-    /** @test */
-    public function it_throws_exception_for_unmapped_exercise(): void
-    {
-        $this->expectException(\Exception::class);
-        $this->mapper->getExerciseId(999);
-    }
-
-    /** @test */
     public function it_maps_routine_ids(): void
     {
-        // Similar to exercise test
+        $this->mapper->mapRoutine(21, 1);
+
+        $this->assertEquals(1, $this->mapper->getRoutineId(21));
+        $this->assertTrue($this->mapper->hasRoutine(21));
+    }
+
+    /** @test */
+    public function it_throws_exception_for_unmapped_routine(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->mapper->getRoutineId(999);
     }
 
     /** @test */
     public function it_maps_session_ids(): void
     {
-        // Similar to exercise test
+        $this->mapper->mapSession(100, 1);
+
+        $this->assertEquals(1, $this->mapper->getSessionId(100));
+        $this->assertTrue($this->mapper->hasSession(100));
+    }
+
+    /** @test */
+    public function it_throws_exception_for_unmapped_session(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->mapper->getSessionId(999);
+    }
+
+    /** @test */
+    public function it_maps_exercise_names(): void
+    {
+        $this->mapper->mapExerciseName(93, 'Barbell Deadlift');
+
+        $this->assertEquals('Barbell Deadlift', $this->mapper->getExerciseName(93));
+        $this->assertTrue($this->mapper->hasExerciseName(93));
+    }
+
+    /** @test */
+    public function it_throws_exception_for_unmapped_exercise_name(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->mapper->getExerciseName(999);
     }
 
     /** @test */
     public function it_returns_counts(): void
     {
-        $this->mapper->mapExercise(1, 10);
         $this->mapper->mapRoutine(2, 20);
+        $this->mapper->mapSession(100, 1);
+        $this->mapper->mapExerciseName(93, 'Barbell Deadlift');
 
         $counts = $this->mapper->getCounts();
 
-        $this->assertEquals(1, $counts['exercises']);
         $this->assertEquals(1, $counts['routines']);
-        $this->assertEquals(0, $counts['sessions']);
+        $this->assertEquals(1, $counts['sessions']);
+        $this->assertEquals(1, $counts['exercise_names']);
     }
 
     /** @test */
     public function it_clears_all_maps(): void
     {
-        $this->mapper->mapExercise(1, 10);
+        $this->mapper->mapRoutine(1, 10);
+        $this->mapper->mapExerciseName(93, 'Test');
         $this->mapper->clear();
 
-        $this->assertFalse($this->mapper->hasExercise(1));
+        $this->assertFalse($this->mapper->hasRoutine(1));
+        $this->assertFalse($this->mapper->hasExerciseName(93));
     }
 }
 ```
@@ -633,11 +661,20 @@ class CustomExerciseImporterTest extends TestCase
     }
 
     /** @test */
-    public function it_maps_old_ids_to_new_ids(): void
+    public function it_uses_update_or_create_by_name(): void
     {
+        // Pre-create an exercise with same name but no description
+        $this->user->exercises()->create(['name' => 'Barbell Shrug']);
+
         $this->importer->import($this->user, $this->mapper);
 
-        $this->assertTrue($this->mapper->hasExercise(11)); // old ID from CSV
+        // Should still be only 1 exercise, but now with description
+        $this->assertDatabaseCount('exercises', 1);
+        $this->assertDatabaseHas('exercises', [
+            'name' => 'Barbell Shrug',
+            'description' => 'A shrug exercise', // From CSV
+            'user_id' => $this->user->id,
+        ]);
     }
 
     /** @test */
@@ -857,6 +894,7 @@ class RoutineDayImporter extends BaseImporter
 
 namespace App\Services\Import\Importers;
 
+use App\Models\Exercise;
 use App\Models\User;
 use App\Services\Import\IdMapper;
 
@@ -869,6 +907,11 @@ class RoutineExerciseImporter extends BaseImporter
     protected function transformRow(array $row): array;
 
     /**
+     * Get or create exercise by name
+     */
+    private function getOrCreateExercise(User $user, string $exerciseName): Exercise;
+
+    /**
      * Attach exercise to routine with pivot data
      */
     private function attachExercise(int $routineId, int $exerciseId, array $pivotData): void;
@@ -877,10 +920,13 @@ class RoutineExerciseImporter extends BaseImporter
 
 **Mapping:**
 - `belongplan` → lookup routine_id via IdMapper
-- `exercise_id` → lookup new exercise_id via IdMapper
+- `exercise_id` → store in IdMapper: `mapper->mapExerciseName(exercise_id, exercisename)`
+- `exercisename` → use to firstOrCreate() Exercise
 - `setcount` → number_sets
 - `timer` → rest_seconds
 - `mysort` → sort
+
+**Important:** While processing this CSV, store the exercise_id → name mapping for later use by ExerciseRecordImporter
 
 #### 5. `app/Services/Import/Importers/WorkoutSessionImporter.php`
 
@@ -925,6 +971,7 @@ class WorkoutSessionImporter extends BaseImporter
 
 namespace App\Services\Import\Importers;
 
+use App\Models\Exercise;
 use App\Models\User;
 use App\Models\WorkoutExercise;
 use App\Models\WorkoutSet;
@@ -946,9 +993,14 @@ class ExerciseLogImporter extends BaseImporter
     protected function transformRow(array $row): array;
 
     /**
+     * Get or create exercise by name
+     */
+    private function getOrCreateExercise(User $user, string $exerciseName): Exercise;
+
+    /**
      * Create WorkoutExercise record
      */
-    private function createWorkoutExercise(array $row, IdMapper $mapper): WorkoutExercise;
+    private function createWorkoutExercise(array $row, IdMapper $mapper, User $user): WorkoutExercise;
 
     /**
      * Create WorkoutSet records from logs field
@@ -968,10 +1020,13 @@ class ExerciseLogImporter extends BaseImporter
 
 **Mapping:**
 - `belongsession` → lookup workout_session_id via IdMapper
-- `eid` → lookup exercise_id via IdMapper
+- `eid` → store in IdMapper: `mapper->mapExerciseName(eid, ename)` (if not already mapped)
+- `ename` → use to firstOrCreate() Exercise
 - `logs` → parse to get number_sets + create WorkoutSet records
 - `day_item_id` → use for sort order
 - Default `rest_seconds` to 60
+
+**Important:** While processing this CSV, store the eid → name mapping for later use by ExerciseRecordImporter
 
 #### 7. `app/Services/Import/Importers/ExerciseRecordImporter.php`
 
@@ -980,6 +1035,7 @@ class ExerciseLogImporter extends BaseImporter
 
 namespace App\Services\Import\Importers;
 
+use App\Models\Exercise;
 use App\Models\ExerciseRecord;
 use App\Models\User;
 use App\Services\Import\IdMapper;
@@ -996,14 +1052,27 @@ class ExerciseRecordImporter extends BaseImporter
     public function validate(): bool;
     public function import(User $user, IdMapper $mapper): int;
     protected function transformRow(array $row): array;
+
+    /**
+     * Find exercise by old ID (requires looking up in exercises table by joining to old data)
+     * OR we need to add exercise name to exercise-records.csv during split
+     */
+    private function getExerciseForRecord(User $user, int $oldExerciseId): ?Exercise;
+
     private function persistRecord(User $user, array $attributes): ExerciseRecord;
 }
 ```
 
 **Mapping:**
-- `eid` → lookup exercise_id via IdMapper
+- `eid` → lookup exercise name via `mapper->getExerciseName(eid)`
+- Use exercise name to `firstOrCreate()` Exercise
 - `record` → best_weight_kg
 - `recordReachTime` → convert to Carbon for achieved_at
+
+**How it works:**
+- Earlier importers (RoutineExerciseImporter, ExerciseLogImporter) store `old_exercise_id => exercise_name` mappings
+- By the time we reach ExerciseRecordImporter, the mapper has all exercise names
+- We lookup the name and use it to find/create the Exercise
 
 ### Update ImportDataCommand
 

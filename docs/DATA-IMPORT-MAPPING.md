@@ -74,7 +74,6 @@ row_id,USERID,TIMESTAMP,belongSys,superset,_id,exercise_id,belongplan,exercisena
 
 | Old CSV Field | New Model Field | Notes |
 |--------------|-----------------|-------|
-| `_id` | - | Store in mapping table for lookups |
 | `name` | `name` | Direct mapping |
 | `description` | `description` | Direct mapping |
 | `image1`, `image2` | `image_path` | Skip for now (not critical) |
@@ -83,9 +82,9 @@ row_id,USERID,TIMESTAMP,belongSys,superset,_id,exercise_id,belongplan,exercisena
 | `rating` | - | Skip |
 | - | `user_id` | Set to import user ID |
 
-**ID Mapping:**
-- Build lookup: `old_exercise_id => new_exercise_id`
-- Used by: routine-exercises, exercise-logs, exercise-records
+**Important:**
+- Use `updateOrCreate(['name' => ...])` to handle exercises that may have been auto-created
+- No ID mapping needed - exercises are looked up by name going forward!
 
 ---
 
@@ -111,13 +110,24 @@ row_id,USERID,TIMESTAMP,belongSys,superset,_id,exercise_id,belongplan,exercisena
 | Old CSV Field | New Pivot Field | Notes |
 |--------------|-----------------|-------|
 | `belongplan` | `routine_id` | Lookup old routine day ID → new routine ID |
-| `exercise_id` | `exercise_id` | Lookup old exercise ID → new exercise ID |
+| `exercise_id` | - | Store in IdMapper for later: `mapper->mapExerciseName(exercise_id, exercisename)` |
+| `exercisename` | - | Use to `firstOrCreate()` Exercise, then get ID |
 | `setcount` | `number_sets` | Direct mapping |
 | `timer` | `rest_seconds` | Direct mapping |
 | `mysort` | `sort` | Direct mapping |
 | `logs` | - | Skip (just last logged data, not template) |
 | `superset` | - | Skip (we don't support supersets) |
 | `targetrep` | - | Skip (not in current schema) |
+
+**Exercise Handling:**
+```php
+// First, store the mapping for later use
+$mapper->mapExerciseName($row['exercise_id'], $row['exercisename']);
+
+// Then get or create the exercise
+$exercise = $user->exercises()->firstOrCreate(['name' => $row['exercisename']]);
+// Use $exercise->id for pivot
+```
 
 ---
 
@@ -150,10 +160,23 @@ row_id,USERID,TIMESTAMP,belongSys,superset,_id,exercise_id,belongplan,exercisena
 | Old CSV Field | New Model Field | Notes |
 |--------------|-----------------|-------|
 | `belongsession` | `workout_session_id` | Lookup old session ID → new workout_session_id |
-| `eid` | `exercise_id` | Lookup old exercise ID → new exercise_id |
+| `eid` | - | Store in IdMapper (if not already): `mapper->mapExerciseName(eid, ename)` |
+| `ename` | - | Use to `firstOrCreate()` Exercise, then get ID |
 | `logs` | - | Parse to count number of sets → `number_sets` |
 | - | `rest_seconds` | Default to 60 or extract from routine if available |
 | `day_item_id` | `sort` | Use as sort order within session |
+
+**Exercise Handling:**
+```php
+// Store the mapping if not already present (may have been set by RoutineExerciseImporter)
+if (!$mapper->hasExerciseName($row['eid'])) {
+    $mapper->mapExerciseName($row['eid'], $row['ename']);
+}
+
+// Get or create the exercise
+$exercise = $user->exercises()->firstOrCreate(['name' => $row['ename']]);
+// Use $exercise->id
+```
 
 **Special Handling:**
 - Parse `logs` field (e.g., `"22.5x5,22.5x8,22.5x8"`) to determine `number_sets`
@@ -188,12 +211,27 @@ Each exercise log creates multiple WorkoutSet records.
 
 | Old CSV Field | New Model Field | Notes |
 |--------------|-----------------|-------|
-| `eid` | `exercise_id` | Lookup old exercise ID → new exercise_id |
+| `eid` | - | Use to lookup exercise name via IdMapper |
 | `record` | `best_weight_kg` | Direct mapping |
 | `recordReachTime` | `achieved_at` | Convert Unix timestamp to Carbon datetime |
 | `target1RM` | - | Skip (not in current schema) |
 | `goalDate` | - | Skip |
 | - | `user_id` | Set to import user ID |
+
+**Exercise Handling:**
+```php
+// Lookup exercise name from IdMapper (populated by earlier importers)
+$exerciseName = $mapper->getExerciseName($row['eid']);
+
+// Find or create exercise by name
+$exercise = $user->exercises()->firstOrCreate(['name' => $exerciseName]);
+
+// Use $exercise->id for exercise_id
+```
+
+**How it works:**
+- By the time this importer runs, RoutineExerciseImporter and ExerciseLogImporter have already populated the IdMapper with `old_exercise_id => exercise_name` mappings
+- We simply lookup the name and use it to find/create the Exercise record
 
 ---
 
