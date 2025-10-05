@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @property Collection<WorkoutSet> $actualSets
+ * @property Collection<WorkoutSet>|null $previousSets
  */
 readonly class WorkoutExerciseData
 {
@@ -19,6 +20,7 @@ readonly class WorkoutExerciseData
         public Collection $actualSets,  // Collection<WorkoutSet>
         public ?int $workoutExerciseId, // null if not yet created
         public bool $fromRoutine,       // true if from routine, false if added manually
+        public ?Collection $previousSets = null, // Collection<WorkoutSet> from last workout, or null
     ) {}
 
     /**

@@ -38,6 +38,7 @@
                     @for($i = 1; $i <= $exerciseData->maxSets(); $i++)
                         @php
                             $set = $exerciseData->actualSets->get($i - 1);
+                            $previousSet = $exerciseData->previousSets?->get($i - 1);
                         @endphp
 
                         <div class="set" data-set-index="{{ $i }}" @if($set) data-set-id="{{ $set->id }}" @endif>
@@ -60,13 +61,15 @@
                                     <button class="save-set" data-set-id="{{ $set->id }}">Save</button>
                                     <button class="delete-set" data-set-id="{{ $set->id }}">Delete</button>
                                 @else
-                                    {{-- Empty set from routine (ready to add) --}}
+                                    {{-- Empty set (show previous values as defaults) --}}
                                     <input type="number"
                                            class="set-weight"
+                                           value="{{ $previousSet?->weight_kg ?? '' }}"
                                            step="0.5"
                                            placeholder="Weight (kg)">
                                     <input type="number"
                                            class="set-reps"
+                                           value="{{ $previousSet?->number_reps ?? '' }}"
                                            placeholder="Reps">
                                     <button class="add-set">Save Set</button>
                                 @endif
