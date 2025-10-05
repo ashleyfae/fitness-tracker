@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\WorkoutSessions\PrepareWorkoutSessionData;
 use App\Http\Requests\StoreWorkoutSessionRequest;
 use App\Models\WorkoutSession;
 use Illuminate\Http\Request;
@@ -10,8 +11,6 @@ class WorkoutSessionController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @TODO Make this prettier
      */
     public function index(Request $request)
     {
@@ -63,17 +62,31 @@ class WorkoutSessionController extends Controller
      * Show the form for editing the workout session.
      * This is the UI to be shown while a session is in-progress and exercises are being completed in real time.
      */
-    public function edit(WorkoutSession $workoutSession)
+    public function edit(WorkoutSession $workoutSession, PrepareWorkoutSessionData $prepareData)
     {
-        $workoutSession->load([
-            'exercises',
-            'exercises.exercise',
-            'exercises.sets',
-        ]);
+        $exercises = $prepareData->execute($workoutSession);
 
         return view('workout-sessions.edit', [
             'workoutSession' => $workoutSession,
+            'exercises' => $exercises,
         ]);
+    }
+
+    /**
+     * Complete the workout session.
+     */
+    public function complete(WorkoutSession $workoutSession)
+    {
+        $workoutSession->update(['ended_at' => now()]);
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'redirect' => route('workouts.show', $workoutSession),
+            ]);
+        }
+
+        return redirect()->route('workouts.show', $workoutSession);
     }
 
     /**

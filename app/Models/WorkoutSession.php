@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Traits\BelongsToUser;
+use App\Observers\WorkoutSessionObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +30,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Builder
  */
+#[ObservedBy(WorkoutSessionObserver::class)]
 class WorkoutSession extends Model
 {
     use BelongsToUser;

@@ -47,3 +47,49 @@
         }
     }
 }
+
+/** Editing Workout Sessions */
+#workout-session {
+    .exercise {
+        margin-bottom: 3rem;
+
+        .exercise-header {
+            align-items: center;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+
+            h2 {
+                margin: 0;
+            }
+
+            .badge {
+                font-size: 85%;
+                text-transform: lowercase;
+            }
+        }
+    }
+}
+
+.sets-container {
+    clear: both;
+
+    .set {
+        margin-bottom: 0.5rem;
+    }
+
+    .set--fields {
+        display: flex;
+        gap: 0.5rem;
+
+        button {
+            flex-shrink: 0;
+        }
+    }
+
+    .add-extra-set {
+        display: block;
+        margin-top: 1rem;
+        width: 100%;
+    }
+}

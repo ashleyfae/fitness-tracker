@@ -1540,6 +1540,43 @@ html:not(.light) .modal {
   padding-left: 2rem;
 }
 
+/** Editing Workout Sessions */
+#workout-session .exercise {
+  margin-bottom: 3rem;
+}
+#workout-session .exercise .exercise-header {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+#workout-session .exercise .exercise-header h2 {
+  margin: 0;
+}
+#workout-session .exercise .exercise-header .badge {
+  font-size: 85%;
+  text-transform: lowercase;
+}
+
+.sets-container {
+  clear: both;
+}
+.sets-container .set {
+  margin-bottom: 0.5rem;
+}
+.sets-container .set--fields {
+  display: flex;
+  gap: 0.5rem;
+}
+.sets-container .set--fields button {
+  flex-shrink: 0;
+}
+.sets-container .add-extra-set {
+  display: block;
+  margin-top: 1rem;
+  width: 100%;
+}
+
 .text-centered {
   text-align: center !important;
 }

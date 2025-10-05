@@ -18,6 +18,7 @@ mix.webpackConfig( {
  */
 
 mix.js('resources/js/app.js', 'public/assets/js')
+    .js('resources/js/workout-session.js', 'public/assets/js')
     .sass('resources/sass/app.scss', 'public/assets/css');
 
 mix.version();

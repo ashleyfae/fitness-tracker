@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Observers\WorkoutSetObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -14,9 +17,11 @@ use Illuminate\Support\Carbon;
  * @property ?Carbon $completed_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property WorkoutExercise $workoutExercise
  *
  * @mixin Builder
  */
+#[ObservedBy(WorkoutSetObserver::class)]
 class WorkoutSet extends Model
 {
     protected $casts = [
@@ -31,6 +36,11 @@ class WorkoutSet extends Model
         'number_reps',
         'completed_at',
     ];
+
+    public function workoutExercise(): BelongsTo
+    {
+        return $this->belongsTo(WorkoutExercise::class);
+    }
 
     public function isComplete(): bool
     {
