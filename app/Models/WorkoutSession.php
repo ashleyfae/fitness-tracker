@@ -45,6 +45,10 @@ class WorkoutSession extends Model
 
     protected $fillable = [
         'routine_id',
+        'started_at',
+        'ended_at',
+        'total_exercises',
+        'total_kg_lifted',
     ];
 
     public function routine(): BelongsTo

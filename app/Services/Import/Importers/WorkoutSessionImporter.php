@@ -36,7 +36,6 @@ class WorkoutSessionImporter extends BaseImporter
             'routine_id' => $routineId,
             'started_at' => $this->timestampConverter->fromUnix((int) $row['starttime']),
             'ended_at' => $this->timestampConverter->fromUnix((int) $row['endtime']),
-            'duration_seconds' => (int) $row['total_time'],
             'total_exercises' => (int) $row['total_exercise'],
             'total_kg_lifted' => (float) $row['total_weight'],
         ]);
