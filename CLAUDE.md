@@ -139,3 +139,9 @@ WorkoutSet
 - Foreign keys should be `model_id` (e.g., `user_id`, `exercise_id`)
 - Pivot tables named alphabetically (e.g., `exercise_routine`)
 - Timestamps on all tables by default
+
+### Important Schema Notes
+
+- **WorkoutSession.routine_id**: Nullable for backwards compatibility with imported historical data only. All new workout sessions MUST have a routine_id. Views should handle null with "Unknown Workout" fallback.
+- **WorkoutSession.duration_seconds**: Generated column, automatically calculated from `started_at` and `ended_at`. Do not set directly.
+- **Exercise.name**: Can be empty in rare cases (76 historical records imported with empty names). New exercises should require a name.
