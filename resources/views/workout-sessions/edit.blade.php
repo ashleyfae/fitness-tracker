@@ -14,7 +14,8 @@
 @section('content')
     <div id="workout-session"
          data-session-id="{{ $workoutSession->id }}"
-         data-csrf="{{ csrf_token() }}">
+         data-csrf="{{ csrf_token() }}"
+         data-total-exercises="{{ $exercises->count() }}">
 
         @foreach($exercises as $exerciseData)
             <div class="exercise"
@@ -81,6 +82,15 @@
 
         <div class="workout-actions">
             <button id="complete-workout">Complete Workout</button>
+        </div>
+    </div>
+
+    {{-- Rest Timer Modal --}}
+    <div id="rest-timer-modal">
+        <h3>Rest:</h3>
+        <div class="rest-timer-content">
+            <div id="rest-timer-display">0:00</div>
+            <button id="skip-rest">Skip Rest</button>
         </div>
     </div>
 @endsection

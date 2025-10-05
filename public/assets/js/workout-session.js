@@ -1,7 +1,185 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/js/rest-timer.js":
+/*!************************************!*\
+  !*** ./resources/js/rest-timer.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RestTimer: () => (/* binding */ RestTimer)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/**
+ * Rest Timer Handler
+ */
+var RestTimer = /*#__PURE__*/function () {
+  function RestTimer() {
+    _classCallCheck(this, RestTimer);
+    this.secondsRemaining = 0;
+    this.intervalId = null;
+    this.modalElement = null;
+    this.audioContext = null;
+  }
+  _createClass(RestTimer, [{
+    key: "start",
+    value: function start(seconds, exerciseName) {
+      var _this = this;
+      if (this.intervalId) {
+        this.stop();
+      }
+      this.secondsRemaining = seconds;
+      this.showModal(exerciseName);
+      this.intervalId = setInterval(function () {
+        return _this.tick();
+      }, 1000);
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+      this.hideModal();
+    }
+  }, {
+    key: "tick",
+    value: function tick() {
+      this.secondsRemaining--;
+      this.updateDisplay();
+      if (this.secondsRemaining <= 0) {
+        this.complete();
+      }
+    }
+  }, {
+    key: "complete",
+    value: function complete() {
+      this.alert();
+      this.stop();
+    }
+  }, {
+    key: "showModal",
+    value: function showModal(exerciseName) {
+      this.modalElement = document.getElementById('rest-timer-modal');
+      this.updateDisplay();
+      this.modalElement.classList.add('active');
+    }
+  }, {
+    key: "hideModal",
+    value: function hideModal() {
+      if (this.modalElement) {
+        this.modalElement.classList.remove('active');
+      }
+    }
+  }, {
+    key: "updateDisplay",
+    value: function updateDisplay() {
+      var minutes = Math.floor(this.secondsRemaining / 60);
+      var seconds = this.secondsRemaining % 60;
+      var display = "".concat(minutes, ":").concat(seconds.toString().padStart(2, '0'));
+      document.getElementById('rest-timer-display').textContent = display;
+    }
+  }, {
+    key: "alert",
+    value: function alert() {
+      // Try vibration first (mobile)
+      if ('vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200]);
+      }
+
+      // Try audio beep (fallback)
+      try {
+        if (!this.audioContext) {
+          this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        var oscillator = this.audioContext.createOscillator();
+        oscillator.connect(this.audioContext.destination);
+        oscillator.frequency.value = 800;
+        oscillator.start();
+        oscillator.stop(this.audioContext.currentTime + 0.2);
+      } catch (e) {
+        // Audio not supported, silent fallback
+      }
+    }
+  }]);
+  return RestTimer;
+}();
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
 /*!*****************************************!*\
   !*** ./resources/js/workout-session.js ***!
   \*****************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _rest_timer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rest-timer.js */ "./resources/js/rest-timer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; var r = _regenerator(), e = r.m(_regeneratorRuntime), t = (Object.getPrototypeOf ? Object.getPrototypeOf(e) : e.__proto__).constructor; function n(r) { var e = "function" == typeof r && r.constructor; return !!e && (e === t || "GeneratorFunction" === (e.displayName || e.name)); } var o = { "throw": 1, "return": 2, "break": 3, "continue": 3 }; function a(r) { var e, t; return function (n) { e || (e = { stop: function stop() { return t(n.a, 2); }, "catch": function _catch() { return n.v; }, abrupt: function abrupt(r, e) { return t(n.a, o[r], e); }, delegateYield: function delegateYield(r, o, a) { return e.resultName = o, t(n.d, _regeneratorValues(r), a); }, finish: function finish(r) { return t(n.f, r); } }, t = function t(r, _t, o) { n.p = e.prev, n.n = e.next; try { return r(_t, o); } finally { e.next = n.n; } }), e.resultName && (e[e.resultName] = n.v, e.resultName = void 0), e.sent = n.v, e.next = n.n; try { return r.call(this, e); } finally { n.p = e.prev, n.n = e.next; } }; } return (_regeneratorRuntime = function _regeneratorRuntime() { return { wrap: function wrap(e, t, n, o) { return r.w(a(e), t, n, o && o.reverse()); }, isGeneratorFunction: n, mark: r.m, awrap: function awrap(r, e) { return new _OverloadYield(r, e); }, AsyncIterator: _regeneratorAsyncIterator, async: function async(r, e, t, o, u) { return (n(e) ? _regeneratorAsyncGen : _regeneratorAsync)(a(r), e, t, o, u); }, keys: _regeneratorKeys, values: _regeneratorValues }; })(); }
 function _regeneratorValues(e) { if (null != e) { var t = e["function" == typeof Symbol && Symbol.iterator || "@@iterator"], r = 0; if (t) return t.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) return { next: function next() { return e && r >= e.length && (e = void 0), { value: e && e[r++], done: !e }; } }; } throw new TypeError(_typeof(e) + " is not iterable"); }
@@ -19,6 +197,8 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
 /**
  * Workout Session AJAX Handler
  */
@@ -27,12 +207,39 @@ var WorkoutSession = /*#__PURE__*/function () {
     _classCallCheck(this, WorkoutSession);
     this.sessionId = document.getElementById('workout-session').dataset.sessionId;
     this.csrfToken = document.getElementById('workout-session').dataset.csrf;
+    this.restTimer = new _rest_timer_js__WEBPACK_IMPORTED_MODULE_0__.RestTimer();
     this.init();
   }
   _createClass(WorkoutSession, [{
     key: "init",
     value: function init() {
       this.attachEventListeners();
+      this.checkRestTimer();
+    }
+  }, {
+    key: "checkRestTimer",
+    value: function checkRestTimer() {
+      var timerData = localStorage.getItem('restTimer');
+      if (timerData) {
+        var _JSON$parse = JSON.parse(timerData),
+          seconds = _JSON$parse.seconds,
+          exerciseName = _JSON$parse.exerciseName;
+        localStorage.removeItem('restTimer');
+        this.restTimer.start(seconds, exerciseName);
+      }
+    }
+  }, {
+    key: "shouldStartTimer",
+    value: function shouldStartTimer(exerciseDiv, setDiv) {
+      var expectedSets = parseInt(exerciseDiv.dataset.expectedSets);
+      var currentSetIndex = parseInt(setDiv.dataset.setIndex);
+      var exerciseSort = parseInt(exerciseDiv.dataset.sort);
+      var totalExercises = parseInt(document.getElementById('workout-session').dataset.totalExercises);
+
+      // Don't start timer if this is the last set of the last exercise
+      var isLastSet = currentSetIndex >= expectedSets;
+      var isLastExercise = exerciseSort >= totalExercises;
+      return !(isLastSet && isLastExercise);
     }
   }, {
     key: "attachEventListeners",
@@ -70,12 +277,17 @@ var WorkoutSession = /*#__PURE__*/function () {
       document.getElementById('complete-workout').addEventListener('click', function () {
         _this.handleCompleteWorkout();
       });
+
+      // Skip rest button
+      document.getElementById('skip-rest').addEventListener('click', function () {
+        _this.restTimer.stop();
+      });
     }
   }, {
     key: "handleAddSet",
     value: function () {
       var _handleAddSet = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
-        var setDiv, exerciseDiv, weightInput, repsInput, weight, reps, exerciseId, workoutExerciseId, restSeconds, sort;
+        var setDiv, exerciseDiv, weightInput, repsInput, weight, reps, exerciseId, workoutExerciseId, restSeconds, sort, exerciseName;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -110,19 +322,28 @@ var WorkoutSession = /*#__PURE__*/function () {
               _context.next = 21;
               return this.addSetToExercise(workoutExerciseId, weight, reps);
             case 21:
+              // Save timer state to localStorage before reload if not last set of last exercise
+              if (this.shouldStartTimer(exerciseDiv, setDiv)) {
+                exerciseName = exerciseDiv.querySelector('h2').textContent;
+                localStorage.setItem('restTimer', JSON.stringify({
+                  seconds: parseInt(restSeconds),
+                  exerciseName: exerciseName
+                }));
+              }
+
               // Reload page to refresh UI
               window.location.reload();
-              _context.next = 27;
+              _context.next = 28;
               break;
-            case 24:
-              _context.prev = 24;
+            case 25:
+              _context.prev = 25;
               _context.t0 = _context["catch"](13);
               alert('Failed to add set: ' + _context.t0.message);
-            case 27:
+            case 28:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[13, 24]]);
+        }, _callee, this, [[13, 25]]);
       }));
       function handleAddSet(_x) {
         return _handleAddSet.apply(this, arguments);
@@ -133,7 +354,7 @@ var WorkoutSession = /*#__PURE__*/function () {
     key: "handleSaveSet",
     value: function () {
       var _handleSaveSet = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(e) {
-        var setDiv, exerciseDiv, setId, weightInput, repsInput, weight, reps, workoutExerciseId;
+        var setDiv, exerciseDiv, setId, weightInput, repsInput, weight, reps, workoutExerciseId, exerciseName, restSeconds;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -156,18 +377,24 @@ var WorkoutSession = /*#__PURE__*/function () {
               _context2.next = 14;
               return this.updateSet(workoutExerciseId, setId, weight, reps);
             case 14:
+              // Start rest timer after saving (no reload for saves)
+              if (this.shouldStartTimer(exerciseDiv, setDiv)) {
+                exerciseName = exerciseDiv.querySelector('h2').textContent;
+                restSeconds = exerciseDiv.dataset.restSeconds;
+                this.restTimer.start(parseInt(restSeconds), exerciseName);
+              }
               alert('Set updated!');
-              _context2.next = 20;
+              _context2.next = 21;
               break;
-            case 17:
-              _context2.prev = 17;
+            case 18:
+              _context2.prev = 18;
               _context2.t0 = _context2["catch"](11);
               alert('Failed to update set: ' + _context2.t0.message);
-            case 20:
+            case 21:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[11, 17]]);
+        }, _callee2, this, [[11, 18]]);
       }));
       function handleSaveSet(_x2) {
         return _handleSaveSet.apply(this, arguments);
@@ -449,5 +676,7 @@ var WorkoutSession = /*#__PURE__*/function () {
 document.addEventListener('DOMContentLoaded', function () {
   new WorkoutSession();
 });
+})();
+
 /******/ })()
 ;

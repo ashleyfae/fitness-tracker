@@ -1,3 +1,5 @@
+import { RestTimer } from './rest-timer.js';
+
 /**
  * Workout Session AJAX Handler
  */
@@ -5,11 +7,35 @@ class WorkoutSession {
     constructor() {
         this.sessionId = document.getElementById('workout-session').dataset.sessionId;
         this.csrfToken = document.getElementById('workout-session').dataset.csrf;
+        this.restTimer = new RestTimer();
         this.init();
     }
 
     init() {
         this.attachEventListeners();
+        this.checkRestTimer();
+    }
+
+    checkRestTimer() {
+        const timerData = localStorage.getItem('restTimer');
+        if (timerData) {
+            const { seconds, exerciseName } = JSON.parse(timerData);
+            localStorage.removeItem('restTimer');
+            this.restTimer.start(seconds, exerciseName);
+        }
+    }
+
+    shouldStartTimer(exerciseDiv, setDiv) {
+        const expectedSets = parseInt(exerciseDiv.dataset.expectedSets);
+        const currentSetIndex = parseInt(setDiv.dataset.setIndex);
+        const exerciseSort = parseInt(exerciseDiv.dataset.sort);
+        const totalExercises = parseInt(document.getElementById('workout-session').dataset.totalExercises);
+
+        // Don't start timer if this is the last set of the last exercise
+        const isLastSet = currentSetIndex >= expectedSets;
+        const isLastExercise = exerciseSort >= totalExercises;
+
+        return !(isLastSet && isLastExercise);
     }
 
     attachEventListeners() {
@@ -36,6 +62,11 @@ class WorkoutSession {
         // Complete workout button
         document.getElementById('complete-workout').addEventListener('click', () => {
             this.handleCompleteWorkout();
+        });
+
+        // Skip rest button
+        document.getElementById('skip-rest').addEventListener('click', () => {
+            this.restTimer.stop();
         });
     }
 
@@ -68,6 +99,15 @@ class WorkoutSession {
                 await this.addSetToExercise(workoutExerciseId, weight, reps);
             }
 
+            // Save timer state to localStorage before reload if not last set of last exercise
+            if (this.shouldStartTimer(exerciseDiv, setDiv)) {
+                const exerciseName = exerciseDiv.querySelector('h2').textContent;
+                localStorage.setItem('restTimer', JSON.stringify({
+                    seconds: parseInt(restSeconds),
+                    exerciseName: exerciseName,
+                }));
+            }
+
             // Reload page to refresh UI
             window.location.reload();
         } catch (error) {
@@ -94,6 +134,14 @@ class WorkoutSession {
 
         try {
             await this.updateSet(workoutExerciseId, setId, weight, reps);
+
+            // Start rest timer after saving (no reload for saves)
+            if (this.shouldStartTimer(exerciseDiv, setDiv)) {
+                const exerciseName = exerciseDiv.querySelector('h2').textContent;
+                const restSeconds = exerciseDiv.dataset.restSeconds;
+                this.restTimer.start(parseInt(restSeconds), exerciseName);
+            }
+
             alert('Set updated!');
         } catch (error) {
             alert('Failed to update set: ' + error.message);
