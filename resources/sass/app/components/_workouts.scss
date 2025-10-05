@@ -7,7 +7,8 @@
     border-left: 6px solid transparent;
     margin-bottom: 1.5rem;
 
-    &:hover {
+    &:hover,
+    label:hover {
         cursor: pointer;
     }
 

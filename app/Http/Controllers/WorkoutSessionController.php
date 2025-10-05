@@ -51,7 +51,8 @@ class WorkoutSessionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the workout session.
+     * This is designed to be used after a session has completed and is no longer in-progress.
      */
     public function show(WorkoutSession $workoutSession)
     {
@@ -59,7 +60,8 @@ class WorkoutSessionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the workout session.
+     * This is the UI to be shown while a session is in-progress and exercises are being completed in real time.
      */
     public function edit(WorkoutSession $workoutSession)
     {
