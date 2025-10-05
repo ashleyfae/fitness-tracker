@@ -10,10 +10,24 @@ class WorkoutSessionController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @TODO Make this prettier
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $sessions = $request->user()
+            ->workoutSessions()
+            ->with([
+                'routine',
+                'exercises.exercise',
+                'exercises.sets',
+            ])
+            ->orderByDesc('ended_at')
+            ->paginate(20);
+
+        return view('workout-sessions.index', [
+            'sessions' => $sessions,
+        ]);
     }
 
     /**
