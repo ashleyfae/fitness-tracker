@@ -8,7 +8,8 @@ class StoreWorkoutExerciseRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Authorization handled by route model binding policy
+        // Check if user owns the workout session
+        return $this->user()->can('update', $this->route('workoutSession'));
     }
 
     public function rules(): array

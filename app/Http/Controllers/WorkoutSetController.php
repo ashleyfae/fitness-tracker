@@ -57,6 +57,8 @@ class WorkoutSetController extends Controller
      */
     public function destroy(WorkoutSession $workoutSession, WorkoutExercise $workoutExercise, WorkoutSet $workoutSet)
     {
+        $this->authorize('delete', $workoutSet);
+
         $workoutSet->delete();
 
         // Observer automatically updates number_sets count and deletes exercise if needed

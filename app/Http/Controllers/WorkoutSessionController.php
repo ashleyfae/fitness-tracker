@@ -77,6 +77,8 @@ class WorkoutSessionController extends Controller
      */
     public function complete(WorkoutSession $workoutSession)
     {
+        $this->authorize('update', $workoutSession);
+
         $workoutSession->update(['ended_at' => now()]);
 
         if (request()->expectsJson()) {

@@ -8,7 +8,8 @@ class UpdateWorkoutSetRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Authorization handled by route model binding policy
+        // Check if user owns the workout set
+        return $this->user()->can('update', $this->route('workoutSet'));
     }
 
     public function rules(): array

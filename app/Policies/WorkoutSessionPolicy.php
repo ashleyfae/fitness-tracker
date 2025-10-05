@@ -7,12 +7,13 @@ use App\Models\WorkoutSession;
 
 class WorkoutSessionPolicy
 {
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -20,7 +21,7 @@ class WorkoutSessionPolicy
      */
     public function view(User $user, WorkoutSession $workoutSession): bool
     {
-        return false;
+        return $user->is($workoutSession->user);
     }
 
     /**
@@ -28,7 +29,7 @@ class WorkoutSessionPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -36,7 +37,7 @@ class WorkoutSessionPolicy
      */
     public function update(User $user, WorkoutSession $workoutSession): bool
     {
-        return false;
+        return $user->is($workoutSession->user);
     }
 
     /**
@@ -44,22 +45,6 @@ class WorkoutSessionPolicy
      */
     public function delete(User $user, WorkoutSession $workoutSession): bool
     {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, WorkoutSession $workoutSession): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, WorkoutSession $workoutSession): bool
-    {
-        return false;
+        return $user->is($workoutSession->user);
     }
 }
