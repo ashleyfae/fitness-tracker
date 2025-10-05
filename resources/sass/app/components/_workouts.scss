@@ -27,3 +27,23 @@
     bottom: 0;
     right: 0;
 }
+
+/** List of sessions */
+#workout-sessions {
+    .workout-session {
+        margin-bottom: 2rem;
+
+        h2 {
+            margin: 0;
+        }
+    }
+
+    .workout-session-exercises {
+        margin: 0 0 0.5rem 1rem;
+
+        ul {
+            margin: 0;
+            padding-left: 2rem;
+        }
+    }
+}
