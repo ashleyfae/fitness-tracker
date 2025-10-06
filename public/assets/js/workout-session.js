@@ -245,32 +245,18 @@ var WorkoutSession = /*#__PURE__*/function () {
     key: "attachEventListeners",
     value: function attachEventListeners() {
       var _this = this;
-      // Add set buttons
-      document.querySelectorAll('.add-set').forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-          return _this.handleAddSet(e);
-        });
-      });
-
-      // Save set buttons
-      document.querySelectorAll('.save-set').forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-          return _this.handleSaveSet(e);
-        });
-      });
-
-      // Delete set buttons
-      document.querySelectorAll('.delete-set').forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-          return _this.handleDeleteSet(e);
-        });
-      });
-
-      // Add extra set buttons
-      document.querySelectorAll('.add-extra-set').forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-          return _this.handleAddExtraSet(e);
-        });
+      // Use event delegation on the workout-session container
+      var container = document.getElementById('workout-session');
+      container.addEventListener('click', function (e) {
+        if (e.target.classList.contains('add-set')) {
+          _this.handleAddSet(e);
+        } else if (e.target.classList.contains('save-set')) {
+          _this.handleSaveSet(e);
+        } else if (e.target.classList.contains('delete-set')) {
+          _this.handleDeleteSet(e);
+        } else if (e.target.classList.contains('add-extra-set')) {
+          _this.handleAddExtraSet(e);
+        }
       });
 
       // Complete workout button
@@ -287,63 +273,78 @@ var WorkoutSession = /*#__PURE__*/function () {
     key: "handleAddSet",
     value: function () {
       var _handleAddSet = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
-        var setDiv, exerciseDiv, weightInput, repsInput, weight, reps, exerciseId, workoutExerciseId, restSeconds, sort, exerciseName;
+        var button, setDiv, exerciseDiv, weightInput, repsInput, weight, reps, exerciseId, workoutExerciseId, restSeconds, sort, response, newSet, exerciseName;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
+              button = e.target; // Prevent double-clicks
+              if (!button.disabled) {
+                _context.next = 3;
+                break;
+              }
+              return _context.abrupt("return");
+            case 3:
+              button.disabled = true;
               setDiv = e.target.closest('.set');
               exerciseDiv = e.target.closest('.exercise');
               weightInput = setDiv.querySelector('.set-weight');
               repsInput = setDiv.querySelector('.set-reps');
               weight = parseFloat(weightInput.value);
               reps = parseInt(repsInput.value);
-              if (!(!weight || !reps)) {
-                _context.next = 9;
+              if (!(weightInput.value === '' || !reps)) {
+                _context.next = 14;
                 break;
               }
               alert('Please enter both weight and reps');
+              button.disabled = false;
               return _context.abrupt("return");
-            case 9:
+            case 14:
               exerciseId = exerciseDiv.dataset.exerciseId;
               workoutExerciseId = exerciseDiv.dataset.workoutExerciseId;
               restSeconds = exerciseDiv.dataset.restSeconds;
               sort = exerciseDiv.dataset.sort;
-              _context.prev = 13;
+              _context.prev = 18;
               if (workoutExerciseId) {
-                _context.next = 19;
+                _context.next = 26;
                 break;
               }
-              _context.next = 17;
+              _context.next = 22;
               return this.createWorkoutExercise(exerciseId, weight, reps, restSeconds, sort);
-            case 17:
-              _context.next = 21;
+            case 22:
+              response = _context.sent;
+              // Update exercise div with new workout_exercise_id
+              exerciseDiv.dataset.workoutExerciseId = response.workout_exercise_id;
+              _context.next = 29;
               break;
-            case 19:
-              _context.next = 21;
+            case 26:
+              _context.next = 28;
               return this.addSetToExercise(workoutExerciseId, weight, reps);
-            case 21:
-              // Save timer state to localStorage before reload if not last set of last exercise
+            case 28:
+              response = _context.sent;
+            case 29:
+              newSet = response.set; // Transform the set div from "empty" to "completed" state
+              this.convertSetToCompleted(setDiv, newSet);
+
+              // Update CSS classes for this exercise's sets
+              this.updateSetClasses(exerciseDiv);
+
+              // Start rest timer if not last set of last exercise
               if (this.shouldStartTimer(exerciseDiv, setDiv)) {
                 exerciseName = exerciseDiv.querySelector('h2').textContent;
-                localStorage.setItem('restTimer', JSON.stringify({
-                  seconds: parseInt(restSeconds),
-                  exerciseName: exerciseName
-                }));
+                this.restTimer.start(parseInt(restSeconds), exerciseName);
               }
-
-              // Reload page to refresh UI
-              window.location.reload();
-              _context.next = 28;
+              _context.next = 39;
               break;
-            case 25:
-              _context.prev = 25;
-              _context.t0 = _context["catch"](13);
+            case 35:
+              _context.prev = 35;
+              _context.t0 = _context["catch"](18);
               alert('Failed to add set: ' + _context.t0.message);
-            case 28:
+              button.disabled = false;
+            case 39:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[13, 25]]);
+        }, _callee, this, [[18, 35]]);
       }));
       function handleAddSet(_x) {
         return _handleAddSet.apply(this, arguments);
@@ -351,13 +352,62 @@ var WorkoutSession = /*#__PURE__*/function () {
       return handleAddSet;
     }()
   }, {
+    key: "convertSetToCompleted",
+    value: function convertSetToCompleted(setDiv, setData) {
+      // Add set ID to div
+      setDiv.dataset.setId = setData.id;
+
+      // Replace the inner HTML with completed state
+      var fieldsDiv = setDiv.querySelector('.set--fields');
+      fieldsDiv.innerHTML = this.generateCompletedSetFieldsHtml(setData);
+
+      // Add completed class
+      setDiv.classList.remove('set--incomplete', 'set--next');
+      setDiv.classList.add('set--complete');
+    }
+  }, {
+    key: "updateSetClasses",
+    value: function updateSetClasses(exerciseDiv) {
+      var sets = exerciseDiv.querySelectorAll('.set');
+      var foundNext = false;
+      sets.forEach(function (setDiv) {
+        var isCompleted = setDiv.hasAttribute('data-set-id');
+
+        // Remove all state classes first
+        setDiv.classList.remove('set--complete', 'set--incomplete', 'set--next');
+        if (isCompleted) {
+          setDiv.classList.add('set--complete');
+        } else {
+          setDiv.classList.add('set--incomplete');
+          // First incomplete set is the "next" set
+          if (!foundNext) {
+            setDiv.classList.add('set--next');
+            foundNext = true;
+          }
+        }
+      });
+    }
+  }, {
+    key: "generateCompletedSetFieldsHtml",
+    value: function generateCompletedSetFieldsHtml(setData) {
+      return "\n            <div class=\"set--field-group\">\n                <input type=\"number\"\n                       class=\"set-weight\"\n                       data-set-id=\"".concat(setData.id, "\"\n                       value=\"").concat(setData.weight_kg, "\"\n                       step=\"0.5\"\n                       placeholder=\"Weight (kg)\">\n                <span>kg</span>\n            </div>\n            <div class=\"set--field-group\">\n                <input type=\"number\"\n                       class=\"set-reps\"\n                       data-set-id=\"").concat(setData.id, "\"\n                       value=\"").concat(setData.number_reps, "\"\n                       placeholder=\"Reps\">\n                <span>reps</span>\n            </div>\n            <button class=\"save-set\" data-set-id=\"").concat(setData.id, "\" aria-label=\"Save set\">&#10003;</button>\n            <button class=\"delete-set\" data-set-id=\"").concat(setData.id, "\" aria-label=\"Delete set\">&times;</button>\n        ");
+    }
+  }, {
     key: "handleSaveSet",
     value: function () {
       var _handleSaveSet = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(e) {
-        var setDiv, exerciseDiv, setId, weightInput, repsInput, weight, reps, workoutExerciseId, exerciseName, restSeconds;
+        var button, setDiv, exerciseDiv, setId, weightInput, repsInput, weight, reps, workoutExerciseId, exerciseName, restSeconds;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
+              button = e.target; // Prevent double-clicks
+              if (!button.disabled) {
+                _context2.next = 3;
+                break;
+              }
+              return _context2.abrupt("return");
+            case 3:
+              button.disabled = true;
               setDiv = e.target.closest('.set');
               exerciseDiv = e.target.closest('.exercise');
               setId = e.target.dataset.setId;
@@ -365,18 +415,19 @@ var WorkoutSession = /*#__PURE__*/function () {
               repsInput = setDiv.querySelector(".set-reps[data-set-id=\"".concat(setId, "\"]"));
               weight = parseFloat(weightInput.value);
               reps = parseInt(repsInput.value);
-              if (!(!weight || !reps)) {
-                _context2.next = 10;
+              if (!(weightInput.value === '' || !reps)) {
+                _context2.next = 15;
                 break;
               }
               alert('Please enter both weight and reps');
+              button.disabled = false;
               return _context2.abrupt("return");
-            case 10:
+            case 15:
               workoutExerciseId = exerciseDiv.dataset.workoutExerciseId;
-              _context2.prev = 11;
-              _context2.next = 14;
+              _context2.prev = 16;
+              _context2.next = 19;
               return this.updateSet(workoutExerciseId, setId, weight, reps);
-            case 14:
+            case 19:
               // Start rest timer after saving (no reload for saves)
               if (this.shouldStartTimer(exerciseDiv, setDiv)) {
                 exerciseName = exerciseDiv.querySelector('h2').textContent;
@@ -384,17 +435,21 @@ var WorkoutSession = /*#__PURE__*/function () {
                 this.restTimer.start(parseInt(restSeconds), exerciseName);
               }
               alert('Set updated!');
-              _context2.next = 21;
+              _context2.next = 26;
               break;
-            case 18:
-              _context2.prev = 18;
-              _context2.t0 = _context2["catch"](11);
+            case 23:
+              _context2.prev = 23;
+              _context2.t0 = _context2["catch"](16);
               alert('Failed to update set: ' + _context2.t0.message);
-            case 21:
+            case 26:
+              _context2.prev = 26;
+              button.disabled = false;
+              return _context2.finish(26);
+            case 29:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[11, 18]]);
+        }, _callee2, this, [[16, 23, 26, 29]]);
       }));
       function handleSaveSet(_x2) {
         return _handleSaveSet.apply(this, arguments);
@@ -432,17 +487,20 @@ var WorkoutSession = /*#__PURE__*/function () {
                 // Reset exercise to "not started" state by removing workout-exercise-id
                 exerciseDiv.removeAttribute('data-workout-exercise-id');
               }
-              _context3.next = 17;
+
+              // Update CSS classes for remaining sets
+              this.updateSetClasses(exerciseDiv);
+              _context3.next = 18;
               break;
-            case 14:
-              _context3.prev = 14;
+            case 15:
+              _context3.prev = 15;
               _context3.t0 = _context3["catch"](6);
               alert('Failed to delete set: ' + _context3.t0.message);
-            case 17:
+            case 18:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[6, 14]]);
+        }, _callee3, this, [[6, 15]]);
       }));
       function handleDeleteSet(_x3) {
         return _handleDeleteSet.apply(this, arguments);
@@ -453,21 +511,20 @@ var WorkoutSession = /*#__PURE__*/function () {
     key: "handleAddExtraSet",
     value: function () {
       var _handleAddExtraSet = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(e) {
-        var exerciseDiv, setsContainer, expectedSets, currentSets, nextSetIndex, setHtml;
+        var exerciseDiv, setsContainer, currentSets, nextSetIndex, setHtml;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               exerciseDiv = e.target.closest('.exercise');
               setsContainer = exerciseDiv.querySelector('.sets-container');
-              expectedSets = parseInt(exerciseDiv.dataset.expectedSets);
               currentSets = setsContainer.querySelectorAll('.set').length;
               nextSetIndex = currentSets + 1; // Add new empty set to DOM
-              setHtml = "\n            <div class=\"set\" data-set-index=\"".concat(nextSetIndex, "\">\n                <label>Set ").concat(nextSetIndex, "</label>\n                <div class=\"set--fields\">\n                    <input type=\"number\" class=\"set-weight\" step=\"0.5\" placeholder=\"Weight (kg)\">\n                    <input type=\"number\" class=\"set-reps\" placeholder=\"Reps\">\n                    <button class=\"add-set\">Save Set</button>\n                </div>\n            </div>\n        "); // Insert before the "Add Another Set" button
+              setHtml = "\n            <div class=\"set set--incomplete\" data-set-index=\"".concat(nextSetIndex, "\">\n                <div class=\"set--number\">Set ").concat(nextSetIndex, "</div>\n                <div class=\"set--fields\">\n                    <div class=\"set--field-group\">\n                        <input type=\"number\"\n                               class=\"set-weight\"\n                               step=\"0.5\"\n                               placeholder=\"Weight (kg)\">\n                        <span>kg</span>\n                    </div>\n                    <div class=\"set--field-group\">\n                        <input type=\"number\"\n                               class=\"set-reps\"\n                               placeholder=\"Reps\">\n                        <span>reps</span>\n                    </div>\n                    <button class=\"add-set\" aria-label=\"Add set\">&#10003;</button>\n                    <button class=\"dummy-delete-set\">&times;</button>\n                </div>\n            </div>\n        "); // Insert before the "Add Another Set" button
               e.target.insertAdjacentHTML('beforebegin', setHtml);
 
-              // Re-attach event listeners
-              this.attachEventListeners();
-            case 8:
+              // Update CSS classes for all sets in this exercise
+              this.updateSetClasses(exerciseDiv);
+            case 7:
             case "end":
               return _context4.stop();
           }

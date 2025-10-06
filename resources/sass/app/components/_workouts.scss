@@ -73,9 +73,12 @@
 
 .sets-container {
     clear: both;
+    margin: 0 -10px 0 -15px;
 
     .set {
+        border-left: 4px solid transparent;
         margin-bottom: 0.5rem;
+        padding-left: 11px;
 
         &--field-group {
             display: flex;
@@ -92,6 +95,31 @@
         }
     }
 
+    .set--complete {
+        .set--number {
+            &::after {
+                content: '\2713'; // ✔ (heavier)
+                color: #28a745; // bootstrap success green
+                margin-left: 0.5rem;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .set--incomplete:not(.set--next) {
+        opacity: 0.5;
+    }
+    .set--next {
+        border-left-color: #4875f5 !important;
+
+        input {
+            color: #4875f5;
+            font: {
+                weight: bold;
+            }
+        }
+    }
+
     .set--fields {
         display: flex;
         gap: 0.5rem;
@@ -99,6 +127,10 @@
         button {
             flex-shrink: 0;
         }
+    }
+
+    .add-extra-set-wrap {
+        padding-left: 15px;
     }
 
     .add-extra-set {

@@ -34,9 +34,21 @@
                         @php
                             $set = $exerciseData->actualSets->get($i - 1);
                             $previousSet = $exerciseData->previousSets?->get($i - 1);
+                            $isCompleted = $set !== null;
+                            $isNext = !$isCompleted && $exerciseData->actualSets->count() === $i - 1;
+
+                            $classes = ['set'];
+                            if ($isCompleted) {
+                                $classes[] = 'set--complete';
+                            } else {
+                                $classes[] = 'set--incomplete';
+                                if ($isNext) {
+                                    $classes[] = 'set--next';
+                                }
+                            }
                         @endphp
 
-                        <div class="set" data-set-index="{{ $i }}" @if($set) data-set-id="{{ $set->id }}" @endif>
+                        <div class="{{ implode(' ', $classes) }}" data-set-index="{{ $i }}" @if($set) data-set-id="{{ $set->id }}" @endif>
                             <div class="set--number">Set {{ $i }}</div>
 
                             <div class="set--fields">
@@ -85,8 +97,10 @@
                         </div>
                     @endfor
 
-                    {{-- Button to add additional sets beyond expected --}}
-                    <button class="add-extra-set">+ Add Another Set</button>
+                    <div class="add-extra-set-wrap">
+                        {{-- Button to add additional sets beyond expected --}}
+                        <button class="add-extra-set">+ Add Another Set</button>
+                    </div>
                 </div>
             </div>
         @endforeach

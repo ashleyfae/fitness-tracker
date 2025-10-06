@@ -1,3 +1,4 @@
+@charset "UTF-8";
 :root {
   --color-grey-100: #F3F4F6;
   --color-grey-200: #E5E7EB;
@@ -1560,9 +1561,12 @@ html:not(.light) .modal {
 
 .sets-container {
   clear: both;
+  margin: 0 -10px 0 -15px;
 }
 .sets-container .set {
+  border-left: 4px solid transparent;
   margin-bottom: 0.5rem;
+  padding-left: 11px;
 }
 .sets-container .set--field-group {
   display: flex;
@@ -1575,12 +1579,31 @@ html:not(.light) .modal {
 .sets-container .set .dummy-delete-set {
   opacity: 0;
 }
+.sets-container .set--complete .set--number::after {
+  content: "✓";
+  color: #28a745;
+  margin-left: 0.5rem;
+  font-weight: bold;
+}
+.sets-container .set--incomplete:not(.set--next) {
+  opacity: 0.5;
+}
+.sets-container .set--next {
+  border-left-color: #4875f5 !important;
+}
+.sets-container .set--next input {
+  color: #4875f5;
+  font-weight: bold;
+}
 .sets-container .set--fields {
   display: flex;
   gap: 0.5rem;
 }
 .sets-container .set--fields button {
   flex-shrink: 0;
+}
+.sets-container .add-extra-set-wrap {
+  padding-left: 15px;
 }
 .sets-container .add-extra-set {
   display: block;
