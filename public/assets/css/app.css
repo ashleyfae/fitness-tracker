@@ -1564,6 +1564,17 @@ html:not(.light) .modal {
 .sets-container .set {
   margin-bottom: 0.5rem;
 }
+.sets-container .set--field-group {
+  display: flex;
+  align-items: center;
+}
+.sets-container .set--field-group span {
+  display: block;
+  padding: 0 0.5rem;
+}
+.sets-container .set .dummy-delete-set {
+  opacity: 0;
+}
 .sets-container .set--fields {
   display: flex;
   gap: 0.5rem;

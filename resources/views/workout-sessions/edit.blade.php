@@ -27,11 +27,6 @@
 
                 <div class="exercise-header">
                     <h2>{{ $exerciseData->exercise->name }}</h2>
-                    @if($exerciseData->fromRoutine)
-                        <span class="badge">From routine</span>
-                    @else
-                        <span class="badge">Added manually</span>
-                    @endif
                 </div>
 
                 <div class="sets-container">
@@ -42,36 +37,49 @@
                         @endphp
 
                         <div class="set" data-set-index="{{ $i }}" @if($set) data-set-id="{{ $set->id }}" @endif>
-                            <label>Set {{ $i }}</label>
+                            <div class="set--number">Set {{ $i }}</div>
 
                             <div class="set--fields">
                                 @if($set)
                                     {{-- Existing set (editable) --}}
-                                    <input type="number"
-                                           class="set-weight"
-                                           data-set-id="{{ $set->id }}"
-                                           value="{{ $set->weight_kg }}"
-                                           step="0.5"
-                                           placeholder="Weight (kg)">
-                                    <input type="number"
-                                           class="set-reps"
-                                           data-set-id="{{ $set->id }}"
-                                           value="{{ $set->number_reps }}"
-                                           placeholder="Reps">
-                                    <button class="save-set" data-set-id="{{ $set->id }}">Save</button>
-                                    <button class="delete-set" data-set-id="{{ $set->id }}">Delete</button>
+                                    <div class="set--field-group">
+                                        <input type="number"
+                                               class="set-weight"
+                                               data-set-id="{{ $set->id }}"
+                                               value="{{ $set->weight_kg }}"
+                                               step="0.5"
+                                               placeholder="Weight (kg)">
+                                        <span>kg</span>
+                                    </div>
+                                    <div class="set--field-group">
+                                        <input type="number"
+                                               class="set-reps"
+                                               data-set-id="{{ $set->id }}"
+                                               value="{{ $set->number_reps }}"
+                                               placeholder="Reps">
+                                        <span>reps</span>
+                                    </div>
+                                    <button class="save-set" data-set-id="{{ $set->id }}" aria-label="Save set">&#10003;</button>
+                                    <button class="delete-set" data-set-id="{{ $set->id }}" aria-label="Delete set">&times;</button>
                                 @else
                                     {{-- Empty set (show previous values as defaults) --}}
-                                    <input type="number"
-                                           class="set-weight"
-                                           value="{{ $previousSet?->weight_kg ?? '' }}"
-                                           step="0.5"
-                                           placeholder="Weight (kg)">
-                                    <input type="number"
-                                           class="set-reps"
-                                           value="{{ $previousSet?->number_reps ?? '' }}"
-                                           placeholder="Reps">
-                                    <button class="add-set">Save Set</button>
+                                    <div class="set--field-group">
+                                        <input type="number"
+                                               class="set-weight"
+                                               value="{{ $previousSet?->weight_kg ?? '' }}"
+                                               step="0.5"
+                                               placeholder="Weight (kg)">
+                                        <span>kg</span>
+                                    </div>
+                                    <div class="set--field-group">
+                                        <input type="number"
+                                               class="set-reps"
+                                               value="{{ $previousSet?->number_reps ?? '' }}"
+                                               placeholder="Reps">
+                                        <span>reps</span>
+                                    </div>
+                                    <button class="add-set" aria-label="Add set">&#10003;</button>
+                                    <button class="dummy-delete-set">&times;</button> {{-- here to avoid shifted layout compared to existing set above --}}
                                 @endif
                             </div>
                         </div>

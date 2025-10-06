@@ -76,6 +76,20 @@
 
     .set {
         margin-bottom: 0.5rem;
+
+        &--field-group {
+            display: flex;
+            align-items: center;
+
+            span {
+                display: block;
+                padding: 0 .5rem;
+            }
+        }
+
+        .dummy-delete-set {
+            opacity: 0;
+        }
     }
 
     .set--fields {
