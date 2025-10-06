@@ -208,6 +208,7 @@ var WorkoutSession = /*#__PURE__*/function () {
     this.sessionId = document.getElementById('workout-session').dataset.sessionId;
     this.csrfToken = document.getElementById('workout-session').dataset.csrf;
     this.restTimer = new _rest_timer_js__WEBPACK_IMPORTED_MODULE_0__.RestTimer();
+    this.lastCompletedSetDiv = null; // Track last completed set for "next" calculation
     this.init();
   }
   _createClass(WorkoutSession, [{
@@ -215,6 +216,7 @@ var WorkoutSession = /*#__PURE__*/function () {
     value: function init() {
       this.attachEventListeners();
       this.checkRestTimer();
+      this.updateSetClasses(); // Initialize set classes on page load
     }
   }, {
     key: "checkRestTimer",
@@ -256,6 +258,29 @@ var WorkoutSession = /*#__PURE__*/function () {
           _this.handleDeleteSet(e);
         } else if (e.target.classList.contains('add-extra-set')) {
           _this.handleAddExtraSet(e);
+        }
+      });
+
+      // Focus handling for inputs in incomplete sets
+      container.addEventListener('focusin', function (e) {
+        if (e.target.matches('.set--incomplete input')) {
+          var setDiv = e.target.closest('.set');
+          // Temporarily mark this as the "next" set
+          document.querySelectorAll('.set--next').forEach(function (s) {
+            return s.classList.remove('set--next');
+          });
+          setDiv.classList.add('set--next');
+        }
+      });
+      container.addEventListener('focusout', function (e) {
+        if (e.target.matches('.set--incomplete input')) {
+          // Restore logical "next" set after a short delay
+          // (delay allows clicking between inputs in same set without flicker)
+          setTimeout(function () {
+            if (!container.contains(document.activeElement) || !document.activeElement.matches('.set--incomplete input')) {
+              _this.updateSetClasses();
+            }
+          }, 50);
         }
       });
 
@@ -325,26 +350,29 @@ var WorkoutSession = /*#__PURE__*/function () {
               newSet = response.set; // Transform the set div from "empty" to "completed" state
               this.convertSetToCompleted(setDiv, newSet);
 
-              // Update CSS classes for this exercise's sets
-              this.updateSetClasses(exerciseDiv);
+              // Track this as the last completed set
+              this.lastCompletedSetDiv = setDiv;
+
+              // Update CSS classes for all sets on the page
+              this.updateSetClasses();
 
               // Start rest timer if not last set of last exercise
               if (this.shouldStartTimer(exerciseDiv, setDiv)) {
                 exerciseName = exerciseDiv.querySelector('h2').textContent;
                 this.restTimer.start(parseInt(restSeconds), exerciseName);
               }
-              _context.next = 39;
+              _context.next = 40;
               break;
-            case 35:
-              _context.prev = 35;
+            case 36:
+              _context.prev = 36;
               _context.t0 = _context["catch"](18);
               alert('Failed to add set: ' + _context.t0.message);
               button.disabled = false;
-            case 39:
+            case 40:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[18, 35]]);
+        }, _callee, this, [[18, 36]]);
       }));
       function handleAddSet(_x) {
         return _handleAddSet.apply(this, arguments);
@@ -367,10 +395,34 @@ var WorkoutSession = /*#__PURE__*/function () {
     }
   }, {
     key: "updateSetClasses",
-    value: function updateSetClasses(exerciseDiv) {
-      var sets = exerciseDiv.querySelectorAll('.set');
-      var foundNext = false;
-      sets.forEach(function (setDiv) {
+    value: function updateSetClasses() {
+      var exerciseDiv = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      // Get all sets on the page in DOM order
+      var allSets = Array.from(document.querySelectorAll('.set'));
+
+      // Find the next incomplete set based on last completed set
+      var nextSetDiv = null;
+      if (this.lastCompletedSetDiv && allSets.includes(this.lastCompletedSetDiv)) {
+        // Find first incomplete set after the last completed one
+        var lastCompletedIndex = allSets.indexOf(this.lastCompletedSetDiv);
+        for (var i = lastCompletedIndex + 1; i < allSets.length; i++) {
+          if (!allSets[i].hasAttribute('data-set-id')) {
+            nextSetDiv = allSets[i];
+            break;
+          }
+        }
+      }
+
+      // Fallback: if no last completed set or no incomplete sets after it,
+      // use the first incomplete set on the page
+      if (!nextSetDiv) {
+        nextSetDiv = allSets.find(function (set) {
+          return !set.hasAttribute('data-set-id');
+        });
+      }
+
+      // Update all sets
+      allSets.forEach(function (setDiv) {
         var isCompleted = setDiv.hasAttribute('data-set-id');
 
         // Remove all state classes first
@@ -379,10 +431,9 @@ var WorkoutSession = /*#__PURE__*/function () {
           setDiv.classList.add('set--complete');
         } else {
           setDiv.classList.add('set--incomplete');
-          // First incomplete set is the "next" set
-          if (!foundNext) {
+          // Mark as next if this is the determined next set
+          if (setDiv === nextSetDiv) {
             setDiv.classList.add('set--next');
-            foundNext = true;
           }
         }
       });
@@ -488,8 +539,8 @@ var WorkoutSession = /*#__PURE__*/function () {
                 exerciseDiv.removeAttribute('data-workout-exercise-id');
               }
 
-              // Update CSS classes for remaining sets
-              this.updateSetClasses(exerciseDiv);
+              // Update CSS classes for all sets on the page
+              this.updateSetClasses();
               _context3.next = 18;
               break;
             case 15:
@@ -511,7 +562,7 @@ var WorkoutSession = /*#__PURE__*/function () {
     key: "handleAddExtraSet",
     value: function () {
       var _handleAddExtraSet = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(e) {
-        var exerciseDiv, setsContainer, currentSets, nextSetIndex, setHtml;
+        var exerciseDiv, setsContainer, currentSets, nextSetIndex, setHtml, wrapper;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
@@ -519,12 +570,13 @@ var WorkoutSession = /*#__PURE__*/function () {
               setsContainer = exerciseDiv.querySelector('.sets-container');
               currentSets = setsContainer.querySelectorAll('.set').length;
               nextSetIndex = currentSets + 1; // Add new empty set to DOM
-              setHtml = "\n            <div class=\"set set--incomplete\" data-set-index=\"".concat(nextSetIndex, "\">\n                <div class=\"set--number\">Set ").concat(nextSetIndex, "</div>\n                <div class=\"set--fields\">\n                    <div class=\"set--field-group\">\n                        <input type=\"number\"\n                               class=\"set-weight\"\n                               step=\"0.5\"\n                               placeholder=\"Weight (kg)\">\n                        <span>kg</span>\n                    </div>\n                    <div class=\"set--field-group\">\n                        <input type=\"number\"\n                               class=\"set-reps\"\n                               placeholder=\"Reps\">\n                        <span>reps</span>\n                    </div>\n                    <button class=\"add-set\" aria-label=\"Add set\">&#10003;</button>\n                    <button class=\"dummy-delete-set\">&times;</button>\n                </div>\n            </div>\n        "); // Insert before the "Add Another Set" button
-              e.target.insertAdjacentHTML('beforebegin', setHtml);
+              setHtml = "\n            <div class=\"set set--incomplete\" data-set-index=\"".concat(nextSetIndex, "\">\n                <div class=\"set--number\">Set ").concat(nextSetIndex, "</div>\n                <div class=\"set--fields\">\n                    <div class=\"set--field-group\">\n                        <input type=\"number\"\n                               class=\"set-weight\"\n                               step=\"0.5\"\n                               placeholder=\"Weight (kg)\">\n                        <span>kg</span>\n                    </div>\n                    <div class=\"set--field-group\">\n                        <input type=\"number\"\n                               class=\"set-reps\"\n                               placeholder=\"Reps\">\n                        <span>reps</span>\n                    </div>\n                    <button class=\"add-set\" aria-label=\"Add set\">&#10003;</button>\n                    <button class=\"dummy-delete-set\">&times;</button>\n                </div>\n            </div>\n        "); // Insert before the wrapper (not the button)
+              wrapper = setsContainer.querySelector('.add-extra-set-wrap');
+              wrapper.insertAdjacentHTML('beforebegin', setHtml);
 
-              // Update CSS classes for all sets in this exercise
-              this.updateSetClasses(exerciseDiv);
-            case 7:
+              // Update CSS classes for all sets on the page
+              this.updateSetClasses();
+            case 8:
             case "end":
               return _context4.stop();
           }

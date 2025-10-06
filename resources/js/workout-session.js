@@ -8,12 +8,14 @@ class WorkoutSession {
         this.sessionId = document.getElementById('workout-session').dataset.sessionId;
         this.csrfToken = document.getElementById('workout-session').dataset.csrf;
         this.restTimer = new RestTimer();
+        this.lastCompletedSetDiv = null; // Track last completed set for "next" calculation
         this.init();
     }
 
     init() {
         this.attachEventListeners();
         this.checkRestTimer();
+        this.updateSetClasses(); // Initialize set classes on page load
     }
 
     checkRestTimer() {
@@ -51,6 +53,29 @@ class WorkoutSession {
                 this.handleDeleteSet(e);
             } else if (e.target.classList.contains('add-extra-set')) {
                 this.handleAddExtraSet(e);
+            }
+        });
+
+        // Focus handling for inputs in incomplete sets
+        container.addEventListener('focusin', (e) => {
+            if (e.target.matches('.set--incomplete input')) {
+                const setDiv = e.target.closest('.set');
+                // Temporarily mark this as the "next" set
+                document.querySelectorAll('.set--next').forEach(s => s.classList.remove('set--next'));
+                setDiv.classList.add('set--next');
+            }
+        });
+
+        container.addEventListener('focusout', (e) => {
+            if (e.target.matches('.set--incomplete input')) {
+                // Restore logical "next" set after a short delay
+                // (delay allows clicking between inputs in same set without flicker)
+                setTimeout(() => {
+                    if (!container.contains(document.activeElement) ||
+                        !document.activeElement.matches('.set--incomplete input')) {
+                        this.updateSetClasses();
+                    }
+                }, 50);
             }
         });
 
@@ -109,8 +134,11 @@ class WorkoutSession {
             // Transform the set div from "empty" to "completed" state
             this.convertSetToCompleted(setDiv, newSet);
 
-            // Update CSS classes for this exercise's sets
-            this.updateSetClasses(exerciseDiv);
+            // Track this as the last completed set
+            this.lastCompletedSetDiv = setDiv;
+
+            // Update CSS classes for all sets on the page
+            this.updateSetClasses();
 
             // Start rest timer if not last set of last exercise
             if (this.shouldStartTimer(exerciseDiv, setDiv)) {
@@ -136,11 +164,32 @@ class WorkoutSession {
         setDiv.classList.add('set--complete');
     }
 
-    updateSetClasses(exerciseDiv) {
-        const sets = exerciseDiv.querySelectorAll('.set');
-        let foundNext = false;
+    updateSetClasses(exerciseDiv = null) {
+        // Get all sets on the page in DOM order
+        const allSets = Array.from(document.querySelectorAll('.set'));
 
-        sets.forEach((setDiv) => {
+        // Find the next incomplete set based on last completed set
+        let nextSetDiv = null;
+
+        if (this.lastCompletedSetDiv && allSets.includes(this.lastCompletedSetDiv)) {
+            // Find first incomplete set after the last completed one
+            const lastCompletedIndex = allSets.indexOf(this.lastCompletedSetDiv);
+            for (let i = lastCompletedIndex + 1; i < allSets.length; i++) {
+                if (!allSets[i].hasAttribute('data-set-id')) {
+                    nextSetDiv = allSets[i];
+                    break;
+                }
+            }
+        }
+
+        // Fallback: if no last completed set or no incomplete sets after it,
+        // use the first incomplete set on the page
+        if (!nextSetDiv) {
+            nextSetDiv = allSets.find(set => !set.hasAttribute('data-set-id'));
+        }
+
+        // Update all sets
+        allSets.forEach((setDiv) => {
             const isCompleted = setDiv.hasAttribute('data-set-id');
 
             // Remove all state classes first
@@ -150,10 +199,9 @@ class WorkoutSession {
                 setDiv.classList.add('set--complete');
             } else {
                 setDiv.classList.add('set--incomplete');
-                // First incomplete set is the "next" set
-                if (!foundNext) {
+                // Mark as next if this is the determined next set
+                if (setDiv === nextSetDiv) {
                     setDiv.classList.add('set--next');
-                    foundNext = true;
                 }
             }
         });
@@ -246,8 +294,8 @@ class WorkoutSession {
                 exerciseDiv.removeAttribute('data-workout-exercise-id');
             }
 
-            // Update CSS classes for remaining sets
-            this.updateSetClasses(exerciseDiv);
+            // Update CSS classes for all sets on the page
+            this.updateSetClasses();
         } catch (error) {
             alert('Failed to delete set: ' + error.message);
         }
@@ -283,11 +331,12 @@ class WorkoutSession {
             </div>
         `;
 
-        // Insert before the "Add Another Set" button
-        e.target.insertAdjacentHTML('beforebegin', setHtml);
+        // Insert before the wrapper (not the button)
+        const wrapper = setsContainer.querySelector('.add-extra-set-wrap');
+        wrapper.insertAdjacentHTML('beforebegin', setHtml);
 
-        // Update CSS classes for all sets in this exercise
-        this.updateSetClasses(exerciseDiv);
+        // Update CSS classes for all sets on the page
+        this.updateSetClasses();
     }
 
     async handleCompleteWorkout() {
