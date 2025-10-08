@@ -1,164 +1,17 @@
 #header {
-    background: var(--color-navbar);
-    margin-bottom: 2rem;
-    width: 100%;
-
-    a:hover {
-        text-decoration: none;
+    > nav {
+        margin-top: 1rem;
     }
 
-    nav {
-        padding-top: .75rem;
-        padding-bottom: .75rem;
-
-        @media (max-width: $size--medium) {
-            .dropdown {
-                position: static;
-                width: 100%;
-            }
-        }
-
-        @media (min-width: $size--medium) {
-            display: flex;
-            flex-flow: wrap;
-            align-items: center;
-            justify-content: space-between;
-        }
-    }
-}
-
-#menu {
-    @media (min-width: $size--medium) {
-        display: flex;
-        flex-basis: 100%;
-        flex-grow: 1;
-        flex-shrink: 0;
-        justify-content: flex-start;
-        align-items: stretch;
-    }
-
-    @media (min-width: $size--large) {
-        flex-basis: auto;
-        flex-wrap: nowrap;
-        flex-shrink: 1;
-    }
-
-    > ul {
-        @include navbar;
-
-        @media (max-width: $size--medium) {
-            margin-bottom: 1rem;
-        }
-    }
-}
-
-button[aria-controls="nav"] {
-    color: white;
-    padding: .5rem .75rem;
-
-    &, &:hover, &:focus {
-        --color-button: var(--color-grey-900) !important;
-        --color-button-border: var(--color-grey-900);
-    }
-}
-
-#nav-right {
-    @media (min-width: $size--medium) {
-        display: flex;
-        align-items: center;
-        flex-grow: 1;
-        flex-shrink: 0;
-        margin-top: .75rem;
-        padding-right: 0;
-    }
-
-    @media (min-width: $size--large) {
-        flex-shrink: 1;
-        margin-left: 1.5rem;
-        margin-top: 0;
-        padding-right: .5rem;
-    }
-
-    form {
-        flex-grow: 1;
-
-        input {
-            --color-input: var(--color-grey-700);
-            --color-input-text: var(--color-grey-200);
-            border: none;
-        }
-    }
-}
-
-#nav-profile {
-    display: none;
-
-    @media (min-width: $size--medium) {
-        display: block;
-        margin-left: .75rem;
-        position: relative;
-    }
-}
-#user-nav-button {
-    @include circle;
-
-    --color-button: var(--color-grey-800);
-    --color-button-text: var(--color-grey-300);
-
-    border: 2px solid transparent;
-    padding: 0;
-
-    &:focus {
-        border: 2px solid white;
-    }
-
-    > svg {
-        font: {
-            size: 1.5rem;
-        }
-        line-height: 2rem;
-    }
-}
-
-@media (min-width: $size--large) {
-    #login-register {
-        display: flex;
+    ul {
         list-style: none;
-        margin-left: 1rem;
+        margin: 0;
         padding: 0;
 
-        li:not([hidden]) ~ :not([hidden]) {
-            margin-left: 1rem;
+        a {
+            display: block;
+            padding: .5rem;
+            width: 100%;
         }
-    }
-}
-
-#mobile-nav {
-    margin-bottom: .5rem;
-
-    button {
-        width: 100%;
-    }
-
-    @media (min-width: $size--medium) {
-        display: none;
-    }
-}
-
-.navbar {
-    @include navbar;
-
-    --color-navbar-active: var(--color-navbar-hover);
-
-    hr {
-        margin: .5rem 0;
-    }
-
-    .light & {
-        --color-navbar-text: var(--color-grey-500);
-        --color-navbar-text-active: var(--color-text);
-        --color-navbar-active: transparent;
-        --color-navbar-hover: var(--color-grey-100);
-        --color-navbar-text-hover: var(--color-navbar-text-active);
     }
 }
