@@ -207,11 +207,36 @@ When workout is completed:
 2. Calculates `total_exercises` (count of WorkoutExercise records)
 3. Calculates `total_kg_lifted` (sum of weight × reps across all sets)
 
-### MVP Trade-offs
+### Frontend Implementation
 
-Current implementation (MVP):
-- ✅ Delete set: Updates DOM dynamically (no page reload)
-- ⏳ Add set: Page reload (easier for MVP, will be replaced with dynamic DOM updates)
-- ⏳ Alerts for feedback (will be replaced with button loading states)
+**Dynamic DOM Updates** (`resources/js/workout-session.js`):
+- ✅ **Add/edit/delete sets**: All operations update DOM dynamically (no page reload)
+- ✅ **Event delegation**: Single listener on container handles all button clicks
+- ✅ **Double-click prevention**: Buttons disabled during AJAX requests
+- ✅ **Validation**: Allows 0 kg weight (bodyweight exercises), but not 0 reps or empty values
+
+**Rest Timer** (`resources/js/rest-timer.js`):
+- Floating modal countdown timer between sets
+- Vibration API (mobile) + Web Audio API (beep) alerts when complete
+- Skippable via button
+- Automatically starts after completing a set (except last set of last exercise)
+
+**CSS State Classes**:
+- `.set--complete`: Set has been saved to database (marked with green checkmark)
+- `.set--incomplete`: Set not yet completed (reduced opacity except for "next" set)
+- `.set--next`: The next set to work on (blue left border, bold blue text, full opacity)
+  - Dynamically follows the last completed set (allows doing exercises out of order)
+  - Temporarily assigned to any incomplete set when focused (returns to logical position on blur)
+
+**Previous Workout Data**:
+- Empty set inputs are pre-filled with weight/reps from the most recent workout session where that exercise was performed
+- Supports PPL-style routines (each exercise looks up its own most recent performance, not just the last workout session)
+- Query optimized to avoid N+1 issues
+
+**Mobile-First Design**:
+- Compact layout with icon-only buttons (✓ for save, × for delete)
+- Touch-friendly tap targets
+- Fixed position rest timer modal (always visible while scrolling)
+- No layout shift when switching between empty/completed set states
 
 Future enhancements documented in `docs/workout-session-ui-implementation.md`.
