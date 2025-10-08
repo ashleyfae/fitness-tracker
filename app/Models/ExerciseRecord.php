@@ -33,6 +33,7 @@ class ExerciseRecord extends Model
     ];
 
     protected $fillable = [
+        'user_id',
         'exercise_id',
         'best_weight_kg',
         'estimated_1rm_kg',

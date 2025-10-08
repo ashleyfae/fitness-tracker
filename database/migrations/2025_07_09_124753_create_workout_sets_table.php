@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('number_reps')->default(0);
             $table->datetime('completed_at')->nullable();
             $table->timestamps();
+
+            $table->index(['weight_kg', 'completed_at']); // For PR calculations (ordering by weight)
         });
     }
 

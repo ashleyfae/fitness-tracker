@@ -24,6 +24,7 @@ return new class extends Migration
 
             $table->index(['user_id', 'routine_id']);
             $table->index(['user_id', 'started_at']);
+            $table->index(['user_id', 'ended_at']); // For PR calculations (completed workouts)
         });
     }
 

@@ -22,6 +22,7 @@ return new class extends Migration
 
             $table->unique(['workout_session_id', 'exercise_id']);
             $table->index(['workout_session_id', 'sort']);
+            $table->index('exercise_id'); // For PR calculations (filtering by exercise)
         });
     }
 
