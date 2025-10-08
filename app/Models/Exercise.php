@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Models\Traits\BelongsToUser;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -16,6 +18,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property ExerciseRoutine|null $pivot
+ *
+ * @property Collection<WorkoutExercise>|WorkoutExercise[] $workoutExercises
+ * @property int|null $workout_exercises_count
  *
  * @mixin Builder
  */
@@ -28,4 +33,9 @@ class Exercise extends Model
         'description',
         'image_path',
     ];
+
+    public function workoutExercises() : HasMany
+    {
+        return $this->hasMany(WorkoutExercise::class);
+    }
 }

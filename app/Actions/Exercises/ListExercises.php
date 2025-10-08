@@ -10,6 +10,7 @@
 namespace App\Actions\Exercises;
 
 use App\Http\Requests\ListExercisesRequest;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -21,7 +22,8 @@ class ListExercises
 
         return $request->user()
             ->exercises()
-            ->when(! empty($data['search']), fn (\Illuminate\Contracts\Database\Eloquent\Builder $builder) => $builder->whereLike('name', '%'.$data['search'].'%'))
+            ->withCount(['workoutExercises'])
+            ->when(! empty($data['search']), fn (Builder $builder) => $builder->whereLike('name', '%'.$data['search'].'%'))
             ->orderBy('name')
             ->paginate(40);
     }
