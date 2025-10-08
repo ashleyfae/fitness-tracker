@@ -12,7 +12,8 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property int $exercise_id
- * @property float $best_weight_kg
+ * @property float|null $best_weight_kg Actual heaviest weight lifted
+ * @property float|null $estimated_1rm_kg Calculated 1-rep max (Epley formula)
  * @property Carbon $achieved_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -27,12 +28,14 @@ class ExerciseRecord extends Model
 
     protected $casts = [
         'best_weight_kg' => 'float',
+        'estimated_1rm_kg' => 'float',
         'achieved_at' => 'datetime',
     ];
 
     protected $fillable = [
         'exercise_id',
         'best_weight_kg',
+        'estimated_1rm_kg',
         'achieved_at',
     ];
 

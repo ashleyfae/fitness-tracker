@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class);
             $table->foreignIdFor(\App\Models\Exercise::class);
-            $table->float('best_weight_kg', 2)->default(0);
+            $table->float('best_weight_kg', 2)->nullable();
+            $table->float('estimated_1rm_kg', 2)->default(0);
             $table->timestamp('achieved_at');
             $table->timestamps();
         });

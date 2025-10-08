@@ -37,7 +37,8 @@ class ExerciseRecordImporter extends BaseImporter
         // Create exercise record
         $this->user->exerciseRecords()->create([
             'exercise_id' => $exercise->id,
-            'best_weight_kg' => (float) $row['record'],
+            'estimated_1rm_kg' => (float) $row['record'], // This was the old app's calculated 1RM
+            'best_weight_kg' => null, // Will be calculated from actual workout data
             'achieved_at' => $this->timestampConverter->fromUnix((int) $row['recordReachTime']),
         ]);
     }
