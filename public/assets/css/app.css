@@ -394,18 +394,30 @@ ul.md\:grid {
   display: block;
 }
 
-#header > nav {
-  margin-top: 1rem;
+#header {
+  border-bottom: 2px solid var(--color-box);
+  margin-bottom: 1.5rem;
 }
 #header ul {
+  display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
 }
+#header ul li {
+  flex: 1;
+}
 #header ul a {
   display: block;
-  padding: 0.5rem;
-  width: 100%;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.2s;
+  font-weight: 500;
+}
+#header ul a.active {
+  border-bottom-color: var(--color-primary, #4875f5);
+  color: white;
 }
 
 .page-header {
