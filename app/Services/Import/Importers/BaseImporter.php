@@ -79,6 +79,11 @@ abstract class BaseImporter
 
         // Read data rows
         while (($data = fgetcsv($handle)) !== false) {
+            // Strip trailing empty fields (caused by trailing commas in CSV)
+            while (count($data) > count($header) && end($data) === '') {
+                array_pop($data);
+            }
+
             if (count($data) === count($header)) {
                 $rows[] = array_combine($header, $data);
             }
