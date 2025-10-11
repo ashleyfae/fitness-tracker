@@ -16,10 +16,10 @@
     @routes
 
     <!-- Scripts -->
-    <script src="{{ asset('assets/js/app.js') }}" defer></script>
+    <script src="{{ mix('assets/js/app.js') }}" defer></script>
 
     <!-- Styles -->
-    <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('assets/css/app.css') }}" rel="stylesheet">
 
     @yield('head')
 </head>
