@@ -196,6 +196,7 @@ body {
 #app {
   display: flex;
   min-height: 100vh;
+  margin-bottom: 2rem;
   flex-direction: column;
 }
 

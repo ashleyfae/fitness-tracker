@@ -51,4 +51,10 @@
         @endif
         </tbody>
     </table>
+
+    @if($routines && $routines->isNotEmpty())
+        <div class="pagination">
+            {{ $routines->links() }}
+        </div>
+    @endif
 @endsection

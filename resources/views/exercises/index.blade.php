@@ -50,4 +50,10 @@
         @endif
         </tbody>
     </table>
+
+    @if($exercises && $exercises->isNotEmpty())
+        <div class="pagination">
+            {{ $exercises->links() }}
+        </div>
+    @endif
 @endsection
