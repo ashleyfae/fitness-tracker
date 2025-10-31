@@ -55,7 +55,17 @@ class WorkoutSessionController extends Controller
      */
     public function show(WorkoutSession $workoutSession)
     {
-        //
+        $this->authorize('view', $workoutSession);
+
+        $workoutSession->load([
+            'routine',
+            'exercises.exercise',
+            'exercises.sets',
+        ]);
+
+        return view('workout-sessions.show', [
+            'session' => $workoutSession,
+        ]);
     }
 
     /**
