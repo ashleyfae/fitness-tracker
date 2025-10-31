@@ -11,7 +11,12 @@
     <div id="workout-sessions">
         @foreach($sessions as $session)
             <div class="workout-session box">
-                <h2>{{ $session->routine?->name ?? 'Unknown Workout' }} (ID: {{ $session->id }})</h2>
+                <h2>
+                    <a href="{{ route('workouts.show', $session) }}">
+                        {{ $session->routine?->name ?? 'Unknown Workout' }}
+                    </a>
+                    (ID: {{ $session->id }})
+                </h2>
                 <p>
                     <strong>Started:</strong> {{ $session->started_at->format('Y-m-d H:i') }} |
                     <strong>Ended:</strong> {{ $session->ended_at?->format('Y-m-d H:i') ?? 'N/A' }} |
