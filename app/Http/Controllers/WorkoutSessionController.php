@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class WorkoutSessionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(WorkoutSession::class, 'workoutSession');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -55,8 +60,6 @@ class WorkoutSessionController extends Controller
      */
     public function show(WorkoutSession $workoutSession)
     {
-        $this->authorize('view', $workoutSession);
-
         $workoutSession->load([
             'routine',
             'exercises.exercise',
