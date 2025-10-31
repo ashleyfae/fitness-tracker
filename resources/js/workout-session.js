@@ -1,4 +1,5 @@
 import { RestTimer } from './rest-timer.js';
+import { WakeLock } from './wake-lock.js';
 
 /**
  * Workout Session AJAX Handler
@@ -8,6 +9,7 @@ class WorkoutSession {
         this.sessionId = document.getElementById('workout-session').dataset.sessionId;
         this.csrfToken = document.getElementById('workout-session').dataset.csrf;
         this.restTimer = new RestTimer();
+        this.wakeLock = new WakeLock();
         this.lastCompletedSetDiv = null; // Track last completed set for "next" calculation
         this.init();
     }
@@ -16,6 +18,7 @@ class WorkoutSession {
         this.attachEventListeners();
         this.checkRestTimer();
         this.updateSetClasses(); // Initialize set classes on page load
+        this.wakeLock.init(); // Keep screen on during workout
     }
 
     checkRestTimer() {
@@ -346,6 +349,8 @@ class WorkoutSession {
             const response = await this.apiRequest('POST', `/workouts/${this.sessionId}/complete`);
 
             if (response.success) {
+                // Release wake lock before redirecting
+                await this.wakeLock.release();
                 window.location.href = response.redirect;
             }
         } catch (error) {
