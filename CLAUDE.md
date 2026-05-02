@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Laravel 11 fitness tracking application that allows users to log workouts, track exercises, and manage workout routines. The application uses PHP 8.2+, Laravel Sail for Docker-based development, Laravel Mix for frontend asset compilation, and follows standard Laravel conventions.
+This is a Laravel 12 fitness tracking application that allows users to log workouts, track exercises, and manage workout routines. The application uses PHP 8.2+, Laravel Sail for Docker-based development, Laravel Mix for frontend asset compilation, and follows standard Laravel conventions.
 
 ## Key Commands
 
