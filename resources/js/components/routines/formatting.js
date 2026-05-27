@@ -1,8 +1,8 @@
 export function formatExercise(exercise) {
     return `<div class="routine--exercise">
-<div class="flex">
-    <h2>${exercise.name}</h2>
+<h2>${exercise.name}</h2>
 
+<div class="routine--exercise--settings">
     <div class="routine--exercise--field">
         <label for="exercise-${exercise.id}-sets">Number sets</label>
         <input type="number" id="exercise-${exercise.id}-sets" name="exercises[${exercise.id}][number_sets]" value="${exercise.pivot?.number_sets || '3'}" min="1" max="200">
