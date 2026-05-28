@@ -23,13 +23,15 @@
             <p>Loading exercises...</p>
         </div>
 
-        <button
-            type="button"
-            class="modal-trigger"
-            data-target="add-exercise-modal"
-        >Add Exercise</button>
+        <div id="routine-action-buttons" class="mt-5">
+            <button
+                type="button"
+                class="modal-trigger"
+                data-target="add-exercise-modal"
+            >Add Exercise</button>
 
-        <button type="submit">Save</button>
+            <button type="submit">Save</button>
+        </div>
     </form>
 
     <x-elements.modal id="add-exercise-modal">

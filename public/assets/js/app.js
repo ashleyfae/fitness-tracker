@@ -86,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _routines_formatting__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../routines/formatting */ "./resources/js/components/routines/formatting.js");
+/* harmony import */ var _layout_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../layout/modals */ "./resources/js/layout/modals.js");
+
 
 document.addEventListener('DOMContentLoaded', function () {
   var wrapper = document.getElementById('search-exercises');
@@ -194,7 +196,7 @@ function handleExerciseClick(event) {
   // Close the modal
   var modal = document.getElementById('add-exercise-modal');
   if (modal) {
-    modal.classList.remove('is-active');
+    (0,_layout_modals__WEBPACK_IMPORTED_MODULE_1__.closeModal)(modal);
   }
 }
 
@@ -209,12 +211,19 @@ function handleExerciseClick(event) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _formatting__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./formatting */ "./resources/js/components/routines/formatting.js");
+/* harmony import */ var _helpers_get_closest__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/get-closest */ "./resources/js/helpers/get-closest.js");
+
 
 document.addEventListener('DOMContentLoaded', function () {
   var wrapper = document.getElementById('exercise-list');
   if (wrapper) {
     loadExercises(wrapper);
   }
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('routine--exercise--remove')) {
+      e.target.parentNode.parentElement.remove();
+    }
+  });
 });
 
 /**
@@ -256,7 +265,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function formatExercise(exercise) {
   var _exercise$pivot, _exercise$pivot2, _exercise$pivot3;
-  return "<div class=\"routine--exercise\">\n<div class=\"flex\">\n    <h2>".concat(exercise.name, "</h2>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sets\">Number sets</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sets\" name=\"exercises[").concat(exercise.id, "][number_sets]\" value=\"").concat(((_exercise$pivot = exercise.pivot) === null || _exercise$pivot === void 0 ? void 0 : _exercise$pivot.number_sets) || '3', "\" min=\"1\" max=\"200\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-rest\">Rest (seconds)</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-rest\" name=\"exercises[").concat(exercise.id, "][rest_seconds]\" value=\"").concat(((_exercise$pivot2 = exercise.pivot) === null || _exercise$pivot2 === void 0 ? void 0 : _exercise$pivot2.rest_seconds) || '60', "\" min=\"1\" max=\"1000\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sort\">Sort position</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sort\" name=\"exercises[").concat(exercise.id, "][sort]\" value=\"").concat((_exercise$pivot3 = exercise.pivot) === null || _exercise$pivot3 === void 0 ? void 0 : _exercise$pivot3.sort, "\" min=\"0\">\n    </div>\n</div>\n</div>");
+  return "<div class=\"routine--exercise\">\n<h2>".concat(exercise.name, "</h2>\n\n<div class=\"routine--exercise--settings\">\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sets\">Number sets</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sets\" name=\"exercises[").concat(exercise.id, "][number_sets]\" value=\"").concat(((_exercise$pivot = exercise.pivot) === null || _exercise$pivot === void 0 ? void 0 : _exercise$pivot.number_sets) || '3', "\" min=\"1\" max=\"200\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-rest\">Rest (seconds)</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-rest\" name=\"exercises[").concat(exercise.id, "][rest_seconds]\" value=\"").concat(((_exercise$pivot2 = exercise.pivot) === null || _exercise$pivot2 === void 0 ? void 0 : _exercise$pivot2.rest_seconds) || '60', "\" min=\"1\" max=\"1000\">\n    </div>\n\n    <div class=\"routine--exercise--field\">\n        <label for=\"exercise-").concat(exercise.id, "-sort\">Sort position</label>\n        <input type=\"number\" id=\"exercise-").concat(exercise.id, "-sort\" name=\"exercises[").concat(exercise.id, "][sort]\" value=\"").concat((_exercise$pivot3 = exercise.pivot) === null || _exercise$pivot3 === void 0 ? void 0 : _exercise$pivot3.sort, "\" min=\"0\">\n    </div>\n</div>\n<div class=\"routine--exercise--remove-wrapper text-right mt-1\">\n    <button type=\"button\" class=\"small routine--exercise--remove\">Remove</button>\n</div>\n</div>");
 }
 
 /***/ }),

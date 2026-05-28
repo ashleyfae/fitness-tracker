@@ -1,4 +1,5 @@
 import {formatExercise} from "../routines/formatting";
+import {closeModal} from "../../layout/modals";
 
 document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.getElementById('search-exercises');
@@ -125,6 +126,6 @@ function handleExerciseClick(event) {
     // Close the modal
     const modal = document.getElementById('add-exercise-modal');
     if (modal) {
-        modal.classList.remove('is-active');
+        closeModal(modal);
     }
 }

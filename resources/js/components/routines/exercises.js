@@ -1,4 +1,5 @@
 import {formatExercise} from "./formatting";
+import getClosest from "../../helpers/get-closest";
 
 document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.getElementById('exercise-list');
@@ -6,6 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (wrapper) {
         loadExercises(wrapper);
     }
+
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('routine--exercise--remove')) {
+            e.target.parentNode.parentElement.remove();
+        }
+    })
 });
 
 /**

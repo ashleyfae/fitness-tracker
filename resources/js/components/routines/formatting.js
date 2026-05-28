@@ -18,5 +18,8 @@ export function formatExercise(exercise) {
         <input type="number" id="exercise-${exercise.id}-sort" name="exercises[${exercise.id}][sort]" value="${exercise.pivot?.sort}" min="0">
     </div>
 </div>
+<div class="routine--exercise--remove-wrapper text-right mt-1">
+    <button type="button" class="small routine--exercise--remove">Remove</button>
+</div>
 </div>`;
 }
