@@ -1,4 +1,5 @@
 import {formatExercise} from "../routines/formatting";
+import {updateReorderButtons, updateSortValues} from "../routines/exercises";
 import {closeModal} from "../../layout/modals";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -122,6 +123,9 @@ function handleExerciseClick(event) {
     // Update the exercise count
     const currentCount = parseInt(exerciseList.getAttribute('data-exercise-count') || '0');
     exerciseList.setAttribute('data-exercise-count', (currentCount + 1).toString());
+
+    updateSortValues();
+    updateReorderButtons();
 
     // Close the modal
     const modal = document.getElementById('add-exercise-modal');

@@ -1,5 +1,4 @@
 import {formatExercise} from "./formatting";
-import getClosest from "../../helpers/get-closest";
 
 document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.getElementById('exercise-list');
@@ -10,9 +9,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', e => {
         if (e.target.classList.contains('routine--exercise--remove')) {
-            e.target.parentNode.parentElement.remove();
+            e.target.closest('.routine--exercise').remove();
+            updateReorderButtons();
         }
-    })
+
+        if (e.target.classList.contains('routine--exercise--move-up')) {
+            const exercise = e.target.closest('.routine--exercise');
+            const prev = exercise.previousElementSibling;
+            if (prev) {
+                exercise.parentNode.insertBefore(exercise, prev);
+                updateSortValues();
+                updateReorderButtons();
+            }
+        }
+
+        if (e.target.classList.contains('routine--exercise--move-down')) {
+            const exercise = e.target.closest('.routine--exercise');
+            const next = exercise.nextElementSibling;
+            if (next) {
+                exercise.parentNode.insertBefore(next, exercise);
+                updateSortValues();
+                updateReorderButtons();
+            }
+        }
+    });
 });
 
 /**
@@ -37,8 +57,33 @@ function loadExercises(wrapper) {
 
             wrapper.innerHTML = html;
             wrapper.setAttribute('data-exercise-count', exerciseCount.toString());
+            updateReorderButtons();
         })
         .catch(error => {
             console.log('Error getting exercises', error);
-        })
+        });
+}
+
+export function updateSortValues() {
+    const exercises = document.querySelectorAll('#exercise-list .routine--exercise');
+    exercises.forEach((exercise, index) => {
+        const sortInput = exercise.querySelector('input[name$="[sort]"]');
+        if (sortInput) {
+            sortInput.value = index;
+        }
+    });
+}
+
+export function updateReorderButtons() {
+    const exercises = Array.from(document.querySelectorAll('#exercise-list .routine--exercise'));
+    exercises.forEach((exercise, index) => {
+        const upBtn = exercise.querySelector('.routine--exercise--move-up');
+        const downBtn = exercise.querySelector('.routine--exercise--move-down');
+        if (upBtn) {
+            upBtn.disabled = index === 0;
+        }
+        if (downBtn) {
+            downBtn.disabled = index === exercises.length - 1;
+        }
+    });
 }
