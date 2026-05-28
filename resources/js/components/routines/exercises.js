@@ -1,4 +1,58 @@
 import {formatExercise} from "./formatting";
+import {closeModal} from "../../layout/modals";
+
+document.addEventListener('exercise:selected', (e) => {
+    const exerciseList = document.getElementById('exercise-list');
+    if (! exerciseList) return;
+
+    const { id, name } = e.detail;
+
+    const exercise = {
+        id,
+        name,
+        pivot: {
+            number_sets: 3,
+            rest_seconds: 60,
+            sort: getMaxSortValue(exerciseList) + 1,
+        }
+    };
+
+    const temp = document.createElement('div');
+    temp.innerHTML = formatExercise(exercise);
+
+    const noExercisesMsg = exerciseList.querySelector('.notification');
+    if (noExercisesMsg) {
+        exerciseList.innerHTML = '';
+    }
+
+    exerciseList.appendChild(temp.firstElementChild);
+
+    const currentCount = parseInt(exerciseList.getAttribute('data-exercise-count') || '0');
+    exerciseList.setAttribute('data-exercise-count', (currentCount + 1).toString());
+
+    updateSortValues();
+    updateReorderButtons();
+
+    const modal = document.getElementById('add-exercise-modal');
+    if (modal) {
+        closeModal(modal);
+    }
+});
+
+function getMaxSortValue(exerciseList) {
+    const existingExercises = exerciseList.querySelectorAll('.routine--exercise');
+    let maxSort = -1;
+
+    existingExercises.forEach(exerciseDiv => {
+        const sortInput = exerciseDiv.querySelector('input[name$="[sort]"]');
+        if (sortInput) {
+            const sortValue = parseInt(sortInput.value);
+            maxSort = Math.max(maxSort, sortValue);
+        }
+    });
+
+    return maxSort;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.getElementById('exercise-list');

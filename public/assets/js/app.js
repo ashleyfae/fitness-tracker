@@ -14,6 +14,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_common_delete__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/common/delete */ "./resources/js/components/common/delete.js");
 /* harmony import */ var _components_common_delete__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_components_common_delete__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _components_exercises_search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/exercises/search */ "./resources/js/components/exercises/search.js");
+/* harmony import */ var _components_exercises_search__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_components_exercises_search__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _components_exercises_goals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/exercises/goals */ "./resources/js/components/exercises/goals.js");
 /* harmony import */ var _components_routines_exercises__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/routines/exercises */ "./resources/js/components/routines/exercises.js");
 /* harmony import */ var _components_workouts_index__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/workouts/index */ "./resources/js/components/workouts/index.js");
@@ -240,15 +241,7 @@ function updateReorderButtons() {
 /*!*****************************************************!*\
   !*** ./resources/js/components/exercises/search.js ***!
   \*****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _routines_formatting__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../routines/formatting */ "./resources/js/components/routines/formatting.js");
-/* harmony import */ var _routines_exercises__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../routines/exercises */ "./resources/js/components/routines/exercises.js");
-/* harmony import */ var _layout_modals__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../layout/modals */ "./resources/js/layout/modals.js");
-
-
+/***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
   var wrapper = document.getElementById('search-exercises');
@@ -294,73 +287,20 @@ function displayExercises(data) {
     html = '<div class="notification">No exercises found.</div>';
   }
   wrapper.innerHTML = html;
-
-  // Add click handlers to all exercise buttons
   wrapper.querySelectorAll('.exercise--search-result button').forEach(function (button) {
-    button.addEventListener('click', handleExerciseClick);
+    button.addEventListener('click', function (e) {
+      var btn = e.currentTarget;
+      document.dispatchEvent(new CustomEvent('exercise:selected', {
+        detail: {
+          id: btn.dataset.id,
+          name: btn.dataset.name
+        }
+      }));
+    });
   });
 }
 function formatExerciseForSearch(exercise) {
   return "<div class=\"exercise--search-result mb-2\">\n<button type=\"button\" data-id=\"".concat(exercise.id, "\" data-name=\"").concat(exercise.name, "\">").concat(exercise.name, "</button>\n</div>");
-}
-function getMaxSortValue(exerciseList) {
-  var existingExercises = exerciseList.querySelectorAll('.routine--exercise');
-  var maxSort = -1;
-  existingExercises.forEach(function (exerciseDiv) {
-    var sortInput = exerciseDiv.querySelector('input[name$="[sort]"]');
-    if (sortInput) {
-      var sortValue = parseInt(sortInput.value);
-      maxSort = Math.max(maxSort, sortValue);
-    }
-  });
-  return maxSort;
-}
-function handleExerciseClick(event) {
-  var button = event.currentTarget;
-  var exerciseId = button.getAttribute('data-id');
-  var exerciseName = button.getAttribute('data-name');
-
-  // Get the exercise list wrapper
-  var exerciseList = document.getElementById('exercise-list');
-  if (!exerciseList) {
-    return;
-  }
-
-  // Create the exercise object with sort value one higher than the maximum found
-  var exercise = {
-    id: exerciseId,
-    name: exerciseName,
-    pivot: {
-      number_sets: 3,
-      rest_seconds: 60,
-      sort: getMaxSortValue(exerciseList) + 1
-    }
-  };
-
-  // Create a temporary div to hold the new exercise HTML
-  var temp = document.createElement('div');
-  temp.innerHTML = (0,_routines_formatting__WEBPACK_IMPORTED_MODULE_0__.formatExercise)(exercise);
-
-  // If there's a "No exercises yet" message, remove it first
-  var noExercisesMsg = exerciseList.querySelector('.notification');
-  if (noExercisesMsg) {
-    exerciseList.innerHTML = '';
-  }
-
-  // Append the new exercise to the list
-  exerciseList.appendChild(temp.firstElementChild);
-
-  // Update the exercise count
-  var currentCount = parseInt(exerciseList.getAttribute('data-exercise-count') || '0');
-  exerciseList.setAttribute('data-exercise-count', (currentCount + 1).toString());
-  (0,_routines_exercises__WEBPACK_IMPORTED_MODULE_1__.updateSortValues)();
-  (0,_routines_exercises__WEBPACK_IMPORTED_MODULE_1__.updateReorderButtons)();
-
-  // Close the modal
-  var modal = document.getElementById('add-exercise-modal');
-  if (modal) {
-    (0,_layout_modals__WEBPACK_IMPORTED_MODULE_2__.closeModal)(modal);
-  }
 }
 
 /***/ }),
@@ -378,7 +318,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   updateSortValues: () => (/* binding */ updateSortValues)
 /* harmony export */ });
 /* harmony import */ var _formatting__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./formatting */ "./resources/js/components/routines/formatting.js");
+/* harmony import */ var _layout_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../layout/modals */ "./resources/js/layout/modals.js");
 
+
+document.addEventListener('exercise:selected', function (e) {
+  var exerciseList = document.getElementById('exercise-list');
+  if (!exerciseList) return;
+  var _e$detail = e.detail,
+    id = _e$detail.id,
+    name = _e$detail.name;
+  var exercise = {
+    id: id,
+    name: name,
+    pivot: {
+      number_sets: 3,
+      rest_seconds: 60,
+      sort: getMaxSortValue(exerciseList) + 1
+    }
+  };
+  var temp = document.createElement('div');
+  temp.innerHTML = (0,_formatting__WEBPACK_IMPORTED_MODULE_0__.formatExercise)(exercise);
+  var noExercisesMsg = exerciseList.querySelector('.notification');
+  if (noExercisesMsg) {
+    exerciseList.innerHTML = '';
+  }
+  exerciseList.appendChild(temp.firstElementChild);
+  var currentCount = parseInt(exerciseList.getAttribute('data-exercise-count') || '0');
+  exerciseList.setAttribute('data-exercise-count', (currentCount + 1).toString());
+  updateSortValues();
+  updateReorderButtons();
+  var modal = document.getElementById('add-exercise-modal');
+  if (modal) {
+    (0,_layout_modals__WEBPACK_IMPORTED_MODULE_1__.closeModal)(modal);
+  }
+});
+function getMaxSortValue(exerciseList) {
+  var existingExercises = exerciseList.querySelectorAll('.routine--exercise');
+  var maxSort = -1;
+  existingExercises.forEach(function (exerciseDiv) {
+    var sortInput = exerciseDiv.querySelector('input[name$="[sort]"]');
+    if (sortInput) {
+      var sortValue = parseInt(sortInput.value);
+      maxSort = Math.max(maxSort, sortValue);
+    }
+  });
+  return maxSort;
+}
 document.addEventListener('DOMContentLoaded', function () {
   var wrapper = document.getElementById('exercise-list');
   if (wrapper) {

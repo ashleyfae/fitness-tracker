@@ -451,6 +451,11 @@ var WorkoutSession = /*#__PURE__*/function () {
         _this.handleCompleteWorkout();
       });
 
+      // Add exercise from library
+      document.addEventListener('exercise:selected', function (e) {
+        _this.handleAddExercise(e.detail.id, e.detail.name);
+      });
+
       // Skip rest button
       document.getElementById('skip-rest').addEventListener('click', function () {
         _this.restTimer.stop();
@@ -749,6 +754,33 @@ var WorkoutSession = /*#__PURE__*/function () {
       }
       return handleAddExtraSet;
     }()
+  }, {
+    key: "handleAddExercise",
+    value: function handleAddExercise(exerciseId, exerciseName) {
+      var sessionDiv = document.getElementById('workout-session');
+      var totalExercises = parseInt(sessionDiv.dataset.totalExercises);
+      var newSort = totalExercises + 1;
+      var actionsDiv = sessionDiv.querySelector('.workout-actions');
+      actionsDiv.insertAdjacentHTML('beforebegin', this.generateExerciseHtml(exerciseId, exerciseName, newSort));
+      sessionDiv.dataset.totalExercises = newSort;
+      var modal = document.getElementById('add-exercise-modal');
+      if (modal) {
+        modal.classList.remove('is-active');
+        document.documentElement.classList.remove('is-clipped');
+      }
+      this.updateSetClasses();
+    }
+  }, {
+    key: "generateExerciseHtml",
+    value: function generateExerciseHtml(exerciseId, exerciseName, sort) {
+      var numSets = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 3;
+      var restSeconds = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 90;
+      var setsHtml = '';
+      for (var i = 1; i <= numSets; i++) {
+        setsHtml += "\n                <div class=\"set set--incomplete\" data-set-index=\"".concat(i, "\">\n                    <div class=\"set--number\">Set ").concat(i, "</div>\n                    <div class=\"set--fields\">\n                        <div class=\"set--field-group\">\n                            <input type=\"number\" class=\"set-weight\" step=\"0.5\" placeholder=\"Weight (kg)\">\n                            <span>kg</span>\n                        </div>\n                        <div class=\"set--field-group\">\n                            <input type=\"number\" class=\"set-reps\" placeholder=\"Reps\">\n                            <span>reps</span>\n                        </div>\n                        <button class=\"add-set\" aria-label=\"Add set\">&#10003;</button>\n                        <button class=\"dummy-delete-set\">&times;</button>\n                    </div>\n                </div>");
+      }
+      return "\n            <div class=\"exercise\"\n                 data-exercise-id=\"".concat(exerciseId, "\"\n                 data-workout-exercise-id=\"\"\n                 data-expected-sets=\"").concat(numSets, "\"\n                 data-rest-seconds=\"").concat(restSeconds, "\"\n                 data-sort=\"").concat(sort, "\">\n                <div class=\"exercise-header\">\n                    <h2>").concat(exerciseName, "</h2>\n                    <button class=\"remove-exercise\" aria-label=\"Remove exercise from session\">Remove</button>\n                </div>\n                <div class=\"sets-container\">\n                    ").concat(setsHtml, "\n                    <div class=\"add-extra-set-wrap\">\n                        <button class=\"add-extra-set\">+ Add Another Set</button>\n                    </div>\n                </div>\n            </div>");
+    }
   }, {
     key: "handleRemoveExercise",
     value: function handleRemoveExercise(e) {

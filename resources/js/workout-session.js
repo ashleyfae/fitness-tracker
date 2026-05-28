@@ -89,6 +89,11 @@ class WorkoutSession {
             this.handleCompleteWorkout();
         });
 
+        // Add exercise from library
+        document.addEventListener('exercise:selected', (e) => {
+            this.handleAddExercise(e.detail.id, e.detail.name);
+        });
+
         // Skip rest button
         document.getElementById('skip-rest').addEventListener('click', () => {
             this.restTimer.stop();
@@ -342,6 +347,66 @@ class WorkoutSession {
 
         // Update CSS classes for all sets on the page
         this.updateSetClasses();
+    }
+
+    handleAddExercise(exerciseId, exerciseName) {
+        const sessionDiv = document.getElementById('workout-session');
+        const totalExercises = parseInt(sessionDiv.dataset.totalExercises);
+        const newSort = totalExercises + 1;
+
+        const actionsDiv = sessionDiv.querySelector('.workout-actions');
+        actionsDiv.insertAdjacentHTML('beforebegin', this.generateExerciseHtml(exerciseId, exerciseName, newSort));
+
+        sessionDiv.dataset.totalExercises = newSort;
+
+        const modal = document.getElementById('add-exercise-modal');
+        if (modal) {
+            modal.classList.remove('is-active');
+            document.documentElement.classList.remove('is-clipped');
+        }
+
+        this.updateSetClasses();
+    }
+
+    generateExerciseHtml(exerciseId, exerciseName, sort, numSets = 3, restSeconds = 90) {
+        let setsHtml = '';
+        for (let i = 1; i <= numSets; i++) {
+            setsHtml += `
+                <div class="set set--incomplete" data-set-index="${i}">
+                    <div class="set--number">Set ${i}</div>
+                    <div class="set--fields">
+                        <div class="set--field-group">
+                            <input type="number" class="set-weight" step="0.5" placeholder="Weight (kg)">
+                            <span>kg</span>
+                        </div>
+                        <div class="set--field-group">
+                            <input type="number" class="set-reps" placeholder="Reps">
+                            <span>reps</span>
+                        </div>
+                        <button class="add-set" aria-label="Add set">&#10003;</button>
+                        <button class="dummy-delete-set">&times;</button>
+                    </div>
+                </div>`;
+        }
+
+        return `
+            <div class="exercise"
+                 data-exercise-id="${exerciseId}"
+                 data-workout-exercise-id=""
+                 data-expected-sets="${numSets}"
+                 data-rest-seconds="${restSeconds}"
+                 data-sort="${sort}">
+                <div class="exercise-header">
+                    <h2>${exerciseName}</h2>
+                    <button class="remove-exercise" aria-label="Remove exercise from session">Remove</button>
+                </div>
+                <div class="sets-container">
+                    ${setsHtml}
+                    <div class="add-extra-set-wrap">
+                        <button class="add-extra-set">+ Add Another Set</button>
+                    </div>
+                </div>
+            </div>`;
     }
 
     handleRemoveExercise(e) {

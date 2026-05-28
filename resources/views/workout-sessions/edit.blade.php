@@ -113,9 +113,15 @@
         @endforeach
 
         <div class="workout-actions">
-            <button id="complete-workout">Complete Workout</button>
+            <button type="button" class="modal-trigger" data-target="add-exercise-modal">+ Add Exercise</button>
+            <button id="complete-workout" class="success">Complete Workout</button>
         </div>
     </div>
+
+    <x-elements.modal id="add-exercise-modal">
+        <h3>Add Exercise</h3>
+        <x-features.search-exercises />
+    </x-elements.modal>
 
     {{-- Rest Timer Modal --}}
     <div id="rest-timer-modal">
