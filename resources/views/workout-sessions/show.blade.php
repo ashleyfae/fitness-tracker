@@ -45,6 +45,20 @@
             @endif
         </div>
 
+        @if($completedGoals->isNotEmpty())
+            <div class="box mt-4">
+                <h2>Goals Completed</h2>
+                <ul class="sets-list">
+                    @foreach($completedGoals as $goal)
+                        <li>
+                            <strong>{{ $goal->exercise->name }}</strong>
+                            &mdash; {{ $goal->target_sets }} sets &times; {{ $goal->target_weight_kg }}kg &times; {{ $goal->target_reps }} reps
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="workout-actions mt-4">
             <a href="{{ route('workouts.index') }}" class="button">Back to All Workouts</a>
         </div>

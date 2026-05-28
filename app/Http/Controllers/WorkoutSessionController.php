@@ -65,10 +65,12 @@ class WorkoutSessionController extends Controller
             'routine',
             'exercises.exercise',
             'exercises.sets',
+            'completedGoals.exercise',
         ]);
 
         return view('workout-sessions.show', [
-            'session' => $workoutSession,
+            'session'        => $workoutSession,
+            'completedGoals' => $workoutSession->completedGoals,
         ]);
     }
 
