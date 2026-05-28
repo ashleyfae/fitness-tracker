@@ -56,6 +56,8 @@ class WorkoutSession {
                 this.handleDeleteSet(e);
             } else if (e.target.classList.contains('add-extra-set')) {
                 this.handleAddExtraSet(e);
+            } else if (e.target.classList.contains('remove-exercise')) {
+                this.handleRemoveExercise(e);
             }
         });
 
@@ -339,6 +341,21 @@ class WorkoutSession {
         wrapper.insertAdjacentHTML('beforebegin', setHtml);
 
         // Update CSS classes for all sets on the page
+        this.updateSetClasses();
+    }
+
+    handleRemoveExercise(e) {
+        const exerciseDiv = e.target.closest('.exercise');
+        const exerciseName = exerciseDiv.querySelector('h2').textContent;
+
+        if (!confirm(`Remove "${exerciseName}" from this session?`)) return;
+
+        exerciseDiv.remove();
+
+        const sessionDiv = document.getElementById('workout-session');
+        const remaining = sessionDiv.querySelectorAll('.exercise').length;
+        sessionDiv.dataset.totalExercises = remaining;
+
         this.updateSetClasses();
     }
 

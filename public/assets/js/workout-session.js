@@ -418,6 +418,8 @@ var WorkoutSession = /*#__PURE__*/function () {
           _this.handleDeleteSet(e);
         } else if (e.target.classList.contains('add-extra-set')) {
           _this.handleAddExtraSet(e);
+        } else if (e.target.classList.contains('remove-exercise')) {
+          _this.handleRemoveExercise(e);
         }
       });
 
@@ -747,6 +749,18 @@ var WorkoutSession = /*#__PURE__*/function () {
       }
       return handleAddExtraSet;
     }()
+  }, {
+    key: "handleRemoveExercise",
+    value: function handleRemoveExercise(e) {
+      var exerciseDiv = e.target.closest('.exercise');
+      var exerciseName = exerciseDiv.querySelector('h2').textContent;
+      if (!confirm("Remove \"".concat(exerciseName, "\" from this session?"))) return;
+      exerciseDiv.remove();
+      var sessionDiv = document.getElementById('workout-session');
+      var remaining = sessionDiv.querySelectorAll('.exercise').length;
+      sessionDiv.dataset.totalExercises = remaining;
+      this.updateSetClasses();
+    }
   }, {
     key: "handleCompleteWorkout",
     value: function () {

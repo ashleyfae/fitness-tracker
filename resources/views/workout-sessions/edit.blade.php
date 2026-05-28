@@ -33,6 +33,7 @@
                             title="Goal: {{ $exerciseData->goal->target_sets }} sets &times; {{ $exerciseData->goal->target_weight_kg }}kg &times; {{ $exerciseData->goal->target_reps }} reps"
                         >&#9733; Goal</span>
                     @endif
+                    <button class="remove-exercise" aria-label="Remove exercise from session">Remove</button>
                 </div>
 
                 <div class="sets-container">
