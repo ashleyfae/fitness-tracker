@@ -27,6 +27,7 @@ use Illuminate\Support\Carbon;
  * @property User $user
  * @property Routine|null $routine
  * @property WorkoutExercise[]|Collection $exercises
+ * @property ExerciseGoal[]|Collection $completedGoals
  *
  * @mixin Builder
  */
@@ -62,5 +63,10 @@ class WorkoutSession extends Model
     public function exercises(): HasMany
     {
         return $this->hasMany(WorkoutExercise::class);
+    }
+
+    public function completedGoals(): HasMany
+    {
+        return $this->hasMany(ExerciseGoal::class, 'completed_in_workout_session_id');
     }
 }

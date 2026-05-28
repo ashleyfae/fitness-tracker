@@ -14,9 +14,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_common_delete__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/common/delete */ "./resources/js/components/common/delete.js");
 /* harmony import */ var _components_common_delete__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_components_common_delete__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _components_exercises_search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/exercises/search */ "./resources/js/components/exercises/search.js");
-/* harmony import */ var _components_routines_exercises__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/routines/exercises */ "./resources/js/components/routines/exercises.js");
-/* harmony import */ var _components_workouts_index__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/workouts/index */ "./resources/js/components/workouts/index.js");
-/* harmony import */ var _components_workouts_index__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_components_workouts_index__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _components_exercises_goals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/exercises/goals */ "./resources/js/components/exercises/goals.js");
+/* harmony import */ var _components_routines_exercises__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/routines/exercises */ "./resources/js/components/routines/exercises.js");
+/* harmony import */ var _components_workouts_index__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/workouts/index */ "./resources/js/components/workouts/index.js");
+/* harmony import */ var _components_workouts_index__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_components_workouts_index__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
@@ -24,6 +25,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Exercises
+
 
 
 // Routines (edit routine exercises)
@@ -74,6 +76,163 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+/***/ }),
+
+/***/ "./resources/js/components/exercises/goals.js":
+/*!****************************************************!*\
+  !*** ./resources/js/components/exercises/goals.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _layout_modals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../layout/modals */ "./resources/js/layout/modals.js");
+
+document.addEventListener('DOMContentLoaded', function () {
+  var wrapper = document.getElementById('exercise-goals');
+  if (!wrapper) return;
+  var form = document.getElementById('goal-form');
+
+  // Track which goal is being edited (null = create mode)
+  var editingGoalId = null;
+  document.getElementById('add-goal-btn').addEventListener('click', function () {
+    editingGoalId = null;
+    document.getElementById('goal-modal-title').textContent = 'Add Goal';
+    form.reset();
+    openGoalModal();
+  });
+  wrapper.addEventListener('click', function (e) {
+    var goalEl = e.target.closest('.exercise-goal');
+    if (!goalEl) return;
+    if (e.target.classList.contains('exercise-goal--edit')) {
+      editingGoalId = goalEl.dataset.id;
+      document.getElementById('goal-modal-title').textContent = 'Edit Goal';
+      document.getElementById('goal-sets').value = goalEl.dataset.sets;
+      document.getElementById('goal-weight').value = goalEl.dataset.weight;
+      document.getElementById('goal-reps').value = goalEl.dataset.reps;
+      openGoalModal();
+    }
+    if (e.target.classList.contains('exercise-goal--delete')) {
+      deleteGoal(goalEl);
+    }
+    if (e.target.classList.contains('exercise-goal--move-up')) {
+      reorderGoal(goalEl, 'up');
+    }
+    if (e.target.classList.contains('exercise-goal--move-down')) {
+      reorderGoal(goalEl, 'down');
+    }
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var data = {
+      target_sets: document.getElementById('goal-sets').value,
+      target_weight_kg: document.getElementById('goal-weight').value,
+      target_reps: document.getElementById('goal-reps').value
+    };
+    if (editingGoalId) {
+      updateGoal(editingGoalId, data);
+    } else {
+      createGoal(data);
+    }
+  });
+  updateReorderButtons();
+});
+function openGoalModal() {
+  var modal = document.getElementById('goal-modal');
+  modal.classList.add('is-active');
+  document.documentElement.classList.add('is-clipped');
+  var first = modal.querySelector('input:not([type="hidden"])');
+  if (first) first.focus();
+}
+function storeUrl() {
+  return document.getElementById('exercise-goals').dataset.storeUrl;
+}
+function goalUrl(goalId) {
+  return "".concat(storeUrl(), "/").concat(goalId);
+}
+function createGoal(data) {
+  axios.post(storeUrl(), data).then(function (res) {
+    appendGoal(res.data);
+    (0,_layout_modals__WEBPACK_IMPORTED_MODULE_0__.closeModal)(document.getElementById('goal-modal'));
+    updateReorderButtons();
+  })["catch"](function (err) {
+    return console.error('Error creating goal', err);
+  });
+}
+function updateGoal(goalId, data) {
+  axios.patch(goalUrl(goalId), data).then(function (res) {
+    var goalEl = document.querySelector(".exercise-goal[data-id=\"".concat(goalId, "\"]"));
+    if (goalEl) syncGoalElement(goalEl, res.data);
+    (0,_layout_modals__WEBPACK_IMPORTED_MODULE_0__.closeModal)(document.getElementById('goal-modal'));
+  })["catch"](function (err) {
+    return console.error('Error updating goal', err);
+  });
+}
+function deleteGoal(goalEl) {
+  axios["delete"](goalUrl(goalEl.dataset.id)).then(function () {
+    goalEl.remove();
+    updateReorderButtons();
+    var wrapper = document.getElementById('exercise-goals');
+    if (!wrapper.querySelector('.exercise-goal') && !document.getElementById('no-goals-message')) {
+      var p = document.createElement('p');
+      p.id = 'no-goals-message';
+      p.className = 'notification';
+      p.textContent = 'No goals yet.';
+      wrapper.prepend(p);
+    }
+  })["catch"](function (err) {
+    return console.error('Error deleting goal', err);
+  });
+}
+function reorderGoal(goalEl, direction) {
+  axios.patch("".concat(goalUrl(goalEl.dataset.id), "/reorder"), {
+    direction: direction
+  }).then(function () {
+    var wrapper = document.getElementById('exercise-goals');
+    if (direction === 'up') {
+      var prev = goalEl.previousElementSibling;
+      if (prev) wrapper.insertBefore(goalEl, prev);
+    } else {
+      var next = goalEl.nextElementSibling;
+      if (next) wrapper.insertBefore(next, goalEl);
+    }
+    updateReorderButtons();
+  })["catch"](function (err) {
+    return console.error('Error reordering goal', err);
+  });
+}
+function appendGoal(goal) {
+  var wrapper = document.getElementById('exercise-goals');
+  var noGoals = document.getElementById('no-goals-message');
+  if (noGoals) noGoals.remove();
+  var el = document.createElement('div');
+  el.className = 'exercise-goal';
+  el.dataset.id = goal.id;
+  el.dataset.sets = goal.target_sets;
+  el.dataset.weight = goal.target_weight_kg;
+  el.dataset.reps = goal.target_reps;
+  el.innerHTML = goalInnerHtml(goal);
+  wrapper.appendChild(el);
+}
+function syncGoalElement(el, goal) {
+  el.dataset.sets = goal.target_sets;
+  el.dataset.weight = goal.target_weight_kg;
+  el.dataset.reps = goal.target_reps;
+  el.querySelector('.exercise-goal--summary').textContent = "".concat(goal.target_sets, " sets \xD7 ").concat(goal.target_weight_kg, "kg \xD7 ").concat(goal.target_reps, " reps");
+}
+function goalInnerHtml(goal) {
+  return "<div class=\"exercise-goal--summary\">".concat(goal.target_sets, " sets \xD7 ").concat(goal.target_weight_kg, "kg \xD7 ").concat(goal.target_reps, " reps</div>\n<div class=\"exercise-goal--actions\">\n    <button type=\"button\" class=\"small exercise-goal--move-up\" aria-label=\"Move up\">&#9650;</button>\n    <button type=\"button\" class=\"small exercise-goal--move-down\" aria-label=\"Move down\">&#9660;</button>\n    <button type=\"button\" class=\"small exercise-goal--edit\">Edit</button>\n    <button type=\"button\" class=\"small danger exercise-goal--delete\">Delete</button>\n</div>");
+}
+function updateReorderButtons() {
+  var goals = Array.from(document.querySelectorAll('#exercise-goals .exercise-goal'));
+  goals.forEach(function (goal, index) {
+    var upBtn = goal.querySelector('.exercise-goal--move-up');
+    var downBtn = goal.querySelector('.exercise-goal--move-down');
+    if (upBtn) upBtn.disabled = index === 0;
+    if (downBtn) downBtn.disabled = index === goals.length - 1;
+  });
+}
 
 /***/ }),
 

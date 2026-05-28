@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\WorkoutSessions\CompleteExerciseGoals;
 use App\Actions\WorkoutSessions\PrepareWorkoutSessionData;
 use App\Http\Requests\StoreWorkoutSessionRequest;
 use App\Models\WorkoutSession;
@@ -64,10 +65,12 @@ class WorkoutSessionController extends Controller
             'routine',
             'exercises.exercise',
             'exercises.sets',
+            'completedGoals.exercise',
         ]);
 
         return view('workout-sessions.show', [
-            'session' => $workoutSession,
+            'session'        => $workoutSession,
+            'completedGoals' => $workoutSession->completedGoals,
         ]);
     }
 
@@ -88,11 +91,13 @@ class WorkoutSessionController extends Controller
     /**
      * Complete the workout session.
      */
-    public function complete(WorkoutSession $workoutSession)
+    public function complete(WorkoutSession $workoutSession, CompleteExerciseGoals $completeGoals)
     {
         $this->authorize('update', $workoutSession);
 
         $workoutSession->update(['ended_at' => now()]);
+
+        $completeGoals->execute($workoutSession);
 
         if (request()->expectsJson()) {
             return response()->json([

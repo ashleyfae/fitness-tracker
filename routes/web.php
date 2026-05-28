@@ -17,6 +17,12 @@ Route::get('/', \App\Http\Controllers\HomepageController::class)->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('exercises', \App\Http\Controllers\ExerciseController::class);
+    Route::prefix('exercises/{exercise}/goals')->name('exercises.goals.')->scopeBindings()->group(function () {
+        Route::post('/', [\App\Http\Controllers\ExerciseGoalController::class, 'store'])->name('store');
+        Route::patch('/{goal}', [\App\Http\Controllers\ExerciseGoalController::class, 'update'])->name('update');
+        Route::delete('/{goal}', [\App\Http\Controllers\ExerciseGoalController::class, 'destroy'])->name('destroy');
+        Route::patch('/{goal}/reorder', [\App\Http\Controllers\ExerciseGoalController::class, 'reorder'])->name('reorder');
+    });
     Route::resource('routines', \App\Http\Controllers\RoutineController::class);
     Route::resource('workouts', \App\Http\Controllers\WorkoutSessionController::class)
         ->parameters(['workouts' => 'workoutSession']);

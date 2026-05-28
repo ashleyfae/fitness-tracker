@@ -3,6 +3,7 @@
 namespace App\Actions\WorkoutSessions;
 
 use App\DataTransferObjects\WorkoutExerciseData;
+use App\Models\ExerciseGoal;
 use App\Models\WorkoutExercise;
 use App\Models\WorkoutSession;
 use App\Models\WorkoutSet;
@@ -25,8 +26,9 @@ class PrepareWorkoutSessionData
             'exercises.sets',
         ]);
 
-        // Get previous workout sets for all exercises in one query
+        // Get previous workout sets and active goals for all exercises in one query each
         $previousSetsMap = $this->getPreviousWorkoutSets($session);
+        $goalsMap = $this->getActiveGoals($session);
 
         $exercises = collect();
 
@@ -45,6 +47,7 @@ class PrepareWorkoutSessionData
                 workoutExerciseId: $workoutExercise?->id,
                 fromRoutine: true,
                 previousSets: $previousSetsMap->get($routineExercise->id),
+                goal: $goalsMap->get($routineExercise->id),
             ));
         }
 
@@ -61,11 +64,35 @@ class PrepareWorkoutSessionData
                     workoutExerciseId: $workoutExercise->id,
                     fromRoutine: false,
                     previousSets: $previousSetsMap->get($workoutExercise->exercise_id),
+                    goal: $goalsMap->get($workoutExercise->exercise_id),
                 ));
             }
         }
 
         return $exercises->sortBy('sort')->values();
+    }
+
+    /**
+     * Get the next active goal for each exercise.
+     * Returns a map of exercise_id => ExerciseGoal
+     */
+    private function getActiveGoals(WorkoutSession $session): Collection
+    {
+        $exerciseIds = $session->routine->exercises->pluck('id')
+            ->merge($session->exercises->pluck('exercise_id'))
+            ->unique();
+
+        if ($exerciseIds->isEmpty()) {
+            return collect();
+        }
+
+        return ExerciseGoal::whereIn('exercise_id', $exerciseIds)
+            ->where('user_id', $session->user_id)
+            ->whereNull('completed_at')
+            ->orderBy('sort')
+            ->get()
+            ->groupBy('exercise_id')
+            ->map(fn ($goals) => $goals->first());
     }
 
     /**

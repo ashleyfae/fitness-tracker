@@ -3,6 +3,7 @@
 namespace App\DataTransferObjects;
 
 use App\Models\Exercise;
+use App\Models\ExerciseGoal;
 use App\Models\WorkoutSet;
 use Illuminate\Support\Collection;
 
@@ -21,6 +22,7 @@ readonly class WorkoutExerciseData
         public ?int $workoutExerciseId, // null if not yet created
         public bool $fromRoutine,       // true if from routine, false if added manually
         public ?Collection $previousSets = null, // Collection<WorkoutSet> from last workout, or null
+        public ?ExerciseGoal $goal = null,       // active progression goal, or null
     ) {}
 
     /**

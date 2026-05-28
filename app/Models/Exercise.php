@@ -21,6 +21,7 @@ use Illuminate\Support\Carbon;
  *
  * @property Collection<WorkoutExercise>|WorkoutExercise[] $workoutExercises
  * @property int|null $workout_exercises_count
+ * @property Collection<ExerciseGoal>|ExerciseGoal[] $goals
  *
  * @mixin Builder
  */
@@ -34,8 +35,18 @@ class Exercise extends Model
         'image_path',
     ];
 
-    public function workoutExercises() : HasMany
+    public function workoutExercises(): HasMany
     {
         return $this->hasMany(WorkoutExercise::class);
+    }
+
+    public function goals(): HasMany
+    {
+        return $this->hasMany(ExerciseGoal::class);
+    }
+
+    public function goal(): HasMany
+    {
+        return $this->hasMany(ExerciseGoal::class);
     }
 }

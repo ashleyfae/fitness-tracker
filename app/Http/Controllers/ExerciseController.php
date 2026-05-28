@@ -74,7 +74,12 @@ class ExerciseController extends Controller
      */
     public function edit(Exercise $exercise): JsonResponse|View
     {
-        return view('exercises.edit', ['exercise' => $exercise]);
+        $goals = $exercise->goals()
+            ->whereNull('completed_at')
+            ->orderBy('sort')
+            ->get();
+
+        return view('exercises.edit', ['exercise' => $exercise, 'goals' => $goals]);
     }
 
     /**
@@ -87,7 +92,7 @@ class ExerciseController extends Controller
         if ($request->expectsJson()) {
             return response()->json($exercise->toArray());
         } else {
-           $request->session()->put('success', 'Exercise updated');
+           $request->session()->flash('success', 'Exercise updated');
 
            return redirect()->back();
         }
