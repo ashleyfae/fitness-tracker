@@ -1333,6 +1333,41 @@ html:not(.light) .modal {
   gap: 1rem;
 }
 
+.exercise-goals-section {
+  margin-top: 2.5rem;
+}
+.exercise-goals-section h2 {
+  margin-bottom: 1rem;
+}
+
+.exercise-goal {
+  align-items: center;
+  background: var(--color-box);
+  border-radius: 8px;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+.exercise-goal--summary {
+  flex: 1;
+  font-size: 1rem;
+}
+.exercise-goal--actions {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.25rem;
+}
+.exercise-goal--move-up, .exercise-goal--move-down {
+  line-height: 1;
+  min-height: 2rem;
+  min-width: 2rem;
+  padding: 0.25rem;
+  text-align: center;
+}
+
 #create-workout {
   padding-bottom: 2rem;
   position: relative;
