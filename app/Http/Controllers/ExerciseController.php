@@ -74,7 +74,7 @@ class ExerciseController extends Controller
      */
     public function edit(Exercise $exercise): JsonResponse|View
     {
-        //
+        return view('exercises.edit', ['exercise' => $exercise]);
     }
 
     /**
@@ -87,7 +87,9 @@ class ExerciseController extends Controller
         if ($request->expectsJson()) {
             return response()->json($exercise->toArray());
         } else {
-            // @TODO
+           $request->session()->put('success', 'Exercise updated');
+
+           return redirect()->back();
         }
     }
 
