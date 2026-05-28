@@ -420,6 +420,8 @@ var WorkoutSession = /*#__PURE__*/function () {
           _this.handleAddExtraSet(e);
         } else if (e.target.classList.contains('remove-exercise')) {
           _this.handleRemoveExercise(e);
+        } else if (e.target.classList.contains('exercise-name-btn')) {
+          _this.handleExerciseNameClick(e);
         }
       });
 
@@ -782,10 +784,22 @@ var WorkoutSession = /*#__PURE__*/function () {
       return "\n            <div class=\"exercise\"\n                 data-exercise-id=\"".concat(exerciseId, "\"\n                 data-workout-exercise-id=\"\"\n                 data-expected-sets=\"").concat(numSets, "\"\n                 data-rest-seconds=\"").concat(restSeconds, "\"\n                 data-sort=\"").concat(sort, "\">\n                <div class=\"exercise-header\">\n                    <h2>").concat(exerciseName, "</h2>\n                    <button class=\"remove-exercise\" aria-label=\"Remove exercise from session\">Remove</button>\n                </div>\n                <div class=\"sets-container\">\n                    ").concat(setsHtml, "\n                    <div class=\"add-extra-set-wrap\">\n                        <button class=\"add-extra-set\">+ Add Another Set</button>\n                    </div>\n                </div>\n            </div>");
     }
   }, {
+    key: "handleExerciseNameClick",
+    value: function handleExerciseNameClick(e) {
+      var btn = e.target;
+      var description = btn.dataset.description;
+      if (!description) return;
+      var modal = document.getElementById('exercise-description-modal');
+      document.getElementById('exercise-description-modal-name').textContent = btn.dataset.name;
+      document.getElementById('exercise-description-modal-body').textContent = description;
+      modal.classList.add('is-active');
+      document.documentElement.classList.add('is-clipped');
+    }
+  }, {
     key: "handleRemoveExercise",
     value: function handleRemoveExercise(e) {
       var exerciseDiv = e.target.closest('.exercise');
-      var exerciseName = exerciseDiv.querySelector('h2').textContent;
+      var exerciseName = exerciseDiv.querySelector('h2').textContent.trim();
       if (!confirm("Remove \"".concat(exerciseName, "\" from this session?"))) return;
       exerciseDiv.remove();
       var sessionDiv = document.getElementById('workout-session');

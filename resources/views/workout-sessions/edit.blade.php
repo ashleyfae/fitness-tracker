@@ -26,7 +26,12 @@
                  data-sort="{{ $exerciseData->sort }}">
 
                 <div class="exercise-header">
-                    <h2>{{ $exerciseData->exercise->name }}</h2>
+                    <h2>
+                        <button class="exercise-name-btn{{ $exerciseData->exercise->description ? ' has-description' : '' }}"
+                                data-name="{{ $exerciseData->exercise->name }}"
+                                data-description="{{ $exerciseData->exercise->description ?? '' }}"
+                        >{{ $exerciseData->exercise->name }}</button>
+                    </h2>
                     @if($exerciseData->goal)
                         <span
                             class="badge goal-badge"
@@ -121,6 +126,11 @@
     <x-elements.modal id="add-exercise-modal">
         <h3>Add Exercise</h3>
         <x-features.search-exercises />
+    </x-elements.modal>
+
+    <x-elements.modal id="exercise-description-modal">
+        <h3 id="exercise-description-modal-name"></h3>
+        <div id="exercise-description-modal-body"></div>
     </x-elements.modal>
 
     {{-- Rest Timer Modal --}}

@@ -63,6 +63,20 @@
                 margin: 0;
             }
 
+            .exercise-name-btn {
+                background: none;
+                border: none;
+                border-radius: 0;
+                color: inherit;
+                font: inherit;
+                padding: 0;
+
+                &.has-description {
+                    border-bottom: 1px dotted currentColor;
+                    cursor: pointer;
+                }
+            }
+
             .badge {
                 font-size: 85%;
                 text-transform: lowercase;

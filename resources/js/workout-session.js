@@ -58,6 +58,8 @@ class WorkoutSession {
                 this.handleAddExtraSet(e);
             } else if (e.target.classList.contains('remove-exercise')) {
                 this.handleRemoveExercise(e);
+            } else if (e.target.classList.contains('exercise-name-btn')) {
+                this.handleExerciseNameClick(e);
             }
         });
 
@@ -409,9 +411,21 @@ class WorkoutSession {
             </div>`;
     }
 
+    handleExerciseNameClick(e) {
+        const btn = e.target;
+        const description = btn.dataset.description;
+        if (!description) return;
+
+        const modal = document.getElementById('exercise-description-modal');
+        document.getElementById('exercise-description-modal-name').textContent = btn.dataset.name;
+        document.getElementById('exercise-description-modal-body').textContent = description;
+        modal.classList.add('is-active');
+        document.documentElement.classList.add('is-clipped');
+    }
+
     handleRemoveExercise(e) {
         const exerciseDiv = e.target.closest('.exercise');
-        const exerciseName = exerciseDiv.querySelector('h2').textContent;
+        const exerciseName = exerciseDiv.querySelector('h2').textContent.trim();
 
         if (!confirm(`Remove "${exerciseName}" from this session?`)) return;
 
