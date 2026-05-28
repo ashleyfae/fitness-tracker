@@ -10,6 +10,23 @@
 @endsection
 
 @section('content')
+    <form action="{{ route('exercises.index') }}" class="mb-4">
+        <label for="exercise-name" class="sr-only">Exercise name</label>
+        <input
+            type="text"
+            id="exercise-name"
+            name="search"
+            value="{{ old('search', request()->input('search')) }}"
+            placeholder="Search by name..."
+        >
+
+        @if(request()->input('search'))
+            <div class="text-right mt-1">
+                <a href="{{ route('exercises.index') }}" class="small">&times; clear filters</a>
+            </div>
+        @endif
+    </form>
+
     <table id="exercises">
         <thead>
         <tr>
