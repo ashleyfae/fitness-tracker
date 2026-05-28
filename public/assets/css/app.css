@@ -1426,6 +1426,16 @@ html:not(.light) .modal {
   font-size: 85%;
   text-transform: lowercase;
 }
+#workout-session .exercise .exercise-header .goal-badge {
+  background: var(--color-blue-600);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 75%;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.2em 0.5em;
+  text-transform: uppercase;
+}
 
 .sets-container {
   clear: both;

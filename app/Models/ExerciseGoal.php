@@ -38,6 +38,8 @@ class ExerciseGoal extends Model
         'target_sets',
         'target_weight_kg',
         'target_reps',
+        'completed_at',
+        'completed_in_workout_session_id',
     ];
 
     protected $casts = [

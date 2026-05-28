@@ -27,6 +27,12 @@
 
                 <div class="exercise-header">
                     <h2>{{ $exerciseData->exercise->name }}</h2>
+                    @if($exerciseData->goal)
+                        <span
+                            class="badge goal-badge"
+                            title="Goal: {{ $exerciseData->goal->target_sets }} sets &times; {{ $exerciseData->goal->target_weight_kg }}kg &times; {{ $exerciseData->goal->target_reps }} reps"
+                        >&#9733; Goal</span>
+                    @endif
                 </div>
 
                 <div class="sets-container">
@@ -74,11 +80,11 @@
                                     <button class="save-set" data-set-id="{{ $set->id }}" aria-label="Save set">&#10003;</button>
                                     <button class="delete-set" data-set-id="{{ $set->id }}" aria-label="Delete set">&times;</button>
                                 @else
-                                    {{-- Empty set (show previous values as defaults) --}}
+                                    {{-- Empty set: goal values take priority over previous session --}}
                                     <div class="set--field-group">
                                         <input type="number"
                                                class="set-weight"
-                                               value="{{ $previousSet?->weight_kg ?? '' }}"
+                                               value="{{ $exerciseData->goal?->target_weight_kg ?? $previousSet?->weight_kg ?? '' }}"
                                                step="0.5"
                                                placeholder="Weight (kg)">
                                         <span>kg</span>
@@ -86,7 +92,7 @@
                                     <div class="set--field-group">
                                         <input type="number"
                                                class="set-reps"
-                                               value="{{ $previousSet?->number_reps ?? '' }}"
+                                               value="{{ $exerciseData->goal?->target_reps ?? $previousSet?->number_reps ?? '' }}"
                                                placeholder="Reps">
                                         <span>reps</span>
                                     </div>
